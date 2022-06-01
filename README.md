@@ -1,3 +1,109 @@
+# Домашнее задание к занятию "4.3. Языки разметки JSON и YAML"
+
+
+## Обязательная задача 1
+Мы выгрузили JSON, который получили через API запрос к нашему сервису:
+```
+    { "info" : "Sample JSON output from our service\t",
+        "elements" :[
+            { "name" : "first",
+            "type" : "server",
+            "ip" : 7175 
+            }
+            { "name" : "second",
+            "type" : "proxy",
+            "ip : 71.78.22.43
+            }
+        ]
+    }
+```
+  Нужно найти и исправить все ошибки, которые допускает наш сервис
+
+не хватает " после ip, адрес должен быть в кавычках в строке "ip : 71.78.22.43
+
+	    { "info" : "Sample JSON output from our service\t",
+        "elements" :[
+            { "name" : "first",
+            "type" : "server",
+            "ip" : 7175
+            }
+            { "name" : "second",
+            "type" : "proxy",
+            "ip" : "71.78.22.43"   
+            }
+        ]
+	}
+
+
+## Обязательная задача 2
+В прошлый рабочий день мы создавали скрипт, позволяющий опрашивать веб-сервисы и получать их IP. К уже реализованному функционалу нам нужно добавить возможность записи JSON и YAML файлов, описывающих наши сервисы. Формат записи JSON по одному сервису: `{ "имя сервиса" : "его IP"}`. Формат записи YAML по одному сервису: `- имя сервиса: его IP`. Если в момент исполнения скрипта меняется IP у сервиса - он должен так же поменяться в yml и json файле.
+
+### Ваш скрипт:
+```python
+!/usr/bin/env python3
+
+import sys
+import socket
+import time
+import json
+import yaml
+
+
+delay = 5
+origip = {'drive.google.com': '0.0.0.0', 'google.com': '0.0.0.0', 'mail.google.com': '0.0.0.0'}
+i = 1
+n = 0
+hostlist = origip.keys()
+hostvalues = origip.values()
+host_ip = [] # added for 4.3.2
+
+while True:
+ for h in origip:
+    newip = socket.gethostbyname(h) 
+    if newip != origip[h] and i==1 and n != 1:
+        print(' [ERROR] ' + str(h) + ' IP mismatch: ' +origip[h]+ ' ' +newip)
+        # Task 4.3.2
+        host_ip.append({h:newip})
+        # json
+	with open ('/home/leolex/file.json', 'w') as jfile:
+            jfile.write(json.dumps(host_ip))
+        #yaml
+        with open ('/home/leolex/file.yaml', 'w') as pfile:
+            pfile.write(yaml.dump(host_ip))
+	# end of task 4.3.2
+    origip[h]=newip
+ i += 1
+ if i >= 10:
+   break
+ time.sleep(delay)
+
+```
+
+### Вывод скрипта при запуске при тестировании:
+```
+ [ERROR] drive.google.com IP mismatch: 0.0.0.0 173.194.73.194
+ [ERROR] google.com IP mismatch: 0.0.0.0 64.233.164.113
+ [ERROR] mail.google.com IP mismatch: 0.0.0.0 64.233.163.17
+
+```
+
+### json-файл(ы), который(е) записал ваш скрипт:
+```json
+leolex@leolex-VirtualBox:~$ cat file.json
+[{"drive.google.com": "173.194.73.194"}, {"google.com": "64.233.164.113"}, {"mail.google.com": "64.233.163.17"}]
+```
+
+### yml-файл(ы), который(е) записал ваш скрипт:
+```yaml
+leolex@leolex-VirtualBox:~$ cat file.yaml
+- drive.google.com: 173.194.73.194
+- google.com: 64.233.164.113
+- mail.google.com: 64.233.163.17
+```
+
+
+********************************************************************************************
+
 
 # Домашнее задание к занятию "4.2. Использование Python для решения типовых DevOps задач"
 

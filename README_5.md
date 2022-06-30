@@ -1,3 +1,96 @@
+5.2. Применение принципов IaaC в работе с виртуальными машинами
+
+Задача 1
+
+Опишите своими словами основные преимущества применения на практике IaaC паттернов.
+Какой из принципов IaaC является основополагающим?
+
+Преимуществом применения IaaC являтся автоматизация процесов разработки и развертывания, что приводит к значительному сокращению времени выхода приложения в коммерческое использование. IaaC подход обьясняет как правильно писать код, структурировать, документировать и т.д. В следствие чего IaaC помогает существенно сократить количество ошибок в конфигурации и проблем связанными с использованием различных сред для разработки, тестирования и развертывания. Самое главное преимущество применения IaaC это идемпотентность, то есть стабильное качество и результат работы кода раз за разом. Обеспечение идемпотентности является ключевым принципом IaaC.
+
+
+Задача 2
+
+Чем Ansible выгодно отличается от других систем управление конфигурациями?
+Какой, на ваш взгляд, метод работы систем конфигурации более надёжный push или pull?
+
+Ansible не требует установки клиента на целевую инфраструктуру все функции производятся по SSH. Также он прост в использовании по сравнению с другими системами управления конфигурациями. Легко расширяется за счет модулей. Написан на python. Для простых задач ansible может быть заущен из командной строки. 
+Push, на мой взгляд, является более надёжным потому что в этом случае администратор контролирует сам многие процессы, такие как установка необходимых ресурсов на управляемый сервер  и на ПК, откуда передаются конфигурации. В режиме pull действия автоматизированы в большей степени и инициируются сервером, что может привести к непредскажуемым результатам и ошибкам. Также режим push не требует установки агентов, что также упрощает работу и повышает надежность.
+
+
+Задача 3
+Установить на личный компьютер:
+
+VirtualBox
+Vagrant
+Ansible
+Приложить вывод команд установленных версий каждой из программ, оформленный в markdown.
+
+leolex@leolex-VirtualBox:~$ vboxmanage --version
+6.1.32_Ubuntur149290
+
+leolex@leolex-VirtualBox:~$ vagrant --version
+Vagrant 2.2.6
+
+leolex@leolex-VirtualBox:~$ ansible --version
+ansible 2.9.6
+  config file = /etc/ansible/ansible.cfg
+  configured module search path = ['/home/leolex/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/lib/python3/dist-packages/ansible
+  executable location = /usr/bin/ansible
+  python version = 3.8.10 (default, Mar 15 2022, 12:22:08) [GCC 9.4.0]
+
+
+Задача 4 (*)
+Воспроизвести практическую часть лекции самостоятельно.
+
+Создать виртуальную машину.
+Зайти внутрь ВМ, убедиться, что Docker установлен с помощью команды
+docker ps
+
+leolex@leolex-VirtualBox:~/.vagrant.d$ vagrant up
+Bringing machine 'server1.netology' up with 'virtualbox' provider...
+==> server1.netology: Importing base box 'bento/ubuntu-20.04'...
+==> server1.netology: Matching MAC address for NAT networking...
+==> server1.netology: Checking if box 'bento/ubuntu-20.04' version '202206.03.0' is up to date...
+==> server1.netology: Setting the name of the VM: server1.netology
+==> server1.netology: Clearing any previously set network interfaces...
+==> server1.netology: Preparing network interfaces based on configuration...
+    server1.netology: Adapter 1: nat
+    server1.netology: Adapter 2: hostonly
+==> server1.netology: Forwarding ports...
+    server1.netology: 22 (guest) => 20011 (host) (adapter 1)
+    server1.netology: 22 (guest) => 2222 (host) (adapter 1)
+==> server1.netology: Running 'pre-boot' VM customizations...
+==> server1.netology: Booting VM...
+==> server1.netology: Waiting for machine to boot. This may take a few minutes...
+    server1.netology: SSH address: 127.0.0.1:2222
+    server1.netology: SSH username: vagrant
+    server1.netology: SSH auth method: private key
+
+Зависает на данном шаге. 
+
+Timed out while waiting for the machine to boot. This means that
+Vagrant was unable to communicate with the guest machine within
+the configured ("config.vm.boot_timeout" value) time period.
+
+If you look above, you should be able to see the error(s) that
+Vagrant had when attempting to connect to the machine. These errors
+are usually good hints as to what may be wrong.
+
+If you're using a custom box, make sure that networking is properly
+working and you're able to connect to the machine. It is a common
+problem that networking isn't setup properly in these boxes.
+Verify that authentication configurations are also setup properly,
+as well.
+
+If the box appears to be booting properly, you may want to increase
+the timeout ("config.vm.boot_timeout") value.
+
+Задача со звездочкой не получилась, по причине приведенной выше ошибки. Пытался гуглить в интернете, но решение не нашел.
+
+
+*****************************************************************************************************
+
 5.1. Введение в виртуализацию. Типы и функции гипервизоров. Обзор рынка вендоров и областей применения.
 
 Задача 1

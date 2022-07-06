@@ -1,3 +1,288 @@
+5.3. Введение. Экосистема. Архитектура. Жизненный цикл Docker контейнера
+
+Задача 1
+Сценарий выполения задачи:
+
+создайте свой репозиторий на https://hub.docker.com;
+выберете любой образ, который содержит веб-сервер Nginx;
+создайте свой fork образа;
+реализуйте функциональность: запуск веб-сервера в фоне с индекс-страницей, содержащей HTML-код ниже:
+<html>
+<head>
+Hey, Netology
+</head>
+<body>
+<h1>I’m DevOps Engineer!</h1>
+</body>
+</html>
+Опубликуйте созданный форк в своем репозитории и предоставьте ответ в виде ссылки на https://hub.docker.com/username_repo.
+
+Ответ:
+  
+root@leolex-VirtualBox:/home/leolex/www# docker login -u leolex
+Password: 
+WARNING! Your password will be stored unencrypted in /root/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+
+root@leolex-VirtualBox:/# docker run --name docker-nginx -d -p 81:80  nginx
+3c32e4e1e8f5085145fdc7d49bde729b368590ee7afc51181e3c81530ad1978e
+
+root@leolex-VirtualBox:/# docker ps
+CONTAINER ID   IMAGE     COMMAND                  CREATED         STATUS         PORTS                               NAMES
+3c32e4e1e8f5   nginx     "/docker-entrypoint.…"   7 seconds ago   Up 6 seconds   0.0.0.0:81->80/tcp, :::81->80/tcp   docker-nginx
+
+root@leolex-VirtualBox:/# docker exec -it docker-nginx bash
+root@3c32e4e1e8f5:/# cd /usr/share/nginx
+root@3c32e4e1e8f5:/usr/share/nginx# ls -la
+total 12
+drwxr-xr-x 3 root root 4096 Jun 23 04:13 .
+drwxr-xr-x 1 root root 4096 Jun 23 04:13 ..
+drwxr-xr-x 2 root root 4096 Jun 23 04:13 html
+root@3c32e4e1e8f5:/usr/share/nginx# cd html
+root@3c32e4e1e8f5:/usr/share/nginx/html# ls -la
+total 16
+drwxr-xr-x 2 root root 4096 Jun 23 04:13 .
+drwxr-xr-x 3 root root 4096 Jun 23 04:13 ..
+-rw-r--r-- 1 root root  497 Jun 21 14:25 50x.html
+-rw-r--r-- 1 root root  615 Jun 21 14:25 index.html
+root@3c32e4e1e8f5:/usr/share/nginx/html# exit
+exit
+
+root@leolex-VirtualBox:/# cd /home/leolex/www
+root@leolex-VirtualBox:/home/leolex/www# ls -la
+total 12
+drwxr-xr-x  2 root   root   4096 июл  5 17:27 .
+drwxr-xr-x 27 leolex leolex 4096 июл  5 17:26 ..
+-rw-r--r--  1 root   root     91 июл  5 17:27 index.html
+
+root@leolex-VirtualBox:/home/leolex/www# docker cp index.html docker-nginx:/usr/share/nginx/html
+
+root@leolex-VirtualBox:/home/leolex/www# docker exec -it docker-nginx bash
+root@3c32e4e1e8f5:/# cd usr/share/nginx/html
+root@3c32e4e1e8f5:/usr/share/nginx/html# ls
+50x.html  index.html
+root@3c32e4e1e8f5:/usr/share/nginx/html# cat index.html
+<html>
+<head>
+Hey, Netology
+</head>
+<body>
+<h1>I’m DevOps Engineer!</h1>
+</body>
+</html>
+
+root@3c32e4e1e8f5:/usr/share/nginx/html# exit
+exit
+
+root@leolex-VirtualBox:/home/leolex/www# docker ps
+CONTAINER ID   IMAGE     COMMAND                  CREATED         STATUS         PORTS                               NAMES
+3c32e4e1e8f5   nginx     "/docker-entrypoint.…"   7 minutes ago   Up 7 minutes   0.0.0.0:81->80/tcp, :::81->80/tcp   docker-nginx
+
+root@leolex-VirtualBox:/home/leolex/www#  docker commit -m "modifyed index.html" -a leolex 3c32e4e1e8f5 leolex/nginx:v1
+sha256:a77dffe3cd6ff1644e67a337d67d431885db6fe8ba02727b00961133b480b44d
+
+root@leolex-VirtualBox:/home/leolex/www# docker image list
+REPOSITORY     TAG       IMAGE ID       CREATED          SIZE
+leolex/nginx   v1        a77dffe3cd6f   12 seconds ago   142MB
+nginx          latest    55f4b40fe486   12 days ago      142MB
+
+root@leolex-VirtualBox:/home/leolex/www# docker push leolex/nginx:v1
+The push refers to repository [docker.io/leolex/nginx]
+c1c95133598c: Pushed 
+e7344f8a29a3: Mounted from library/nginx 
+44193d3f4ea2: Mounted from library/nginx 
+41451f050aa8: Mounted from library/nginx 
+b2f82de68e0d: Mounted from library/nginx 
+d5b40e80384b: Mounted from library/nginx 
+08249ce7456a: Mounted from library/nginx 
+v1: digest: sha256:78f354c4a78a465c481c5ae17c8e473caff68d0cd35b3e8832d32dd164f4c57b size: 1778
+root@leolex-VirtualBox:/home/leolex/www# 
+
+root@leolex-VirtualBox:/home/leolex/www# docker stop docker-nginx
+docker-nginx
+root@leolex-VirtualBox:/home/leolex/www# docker rm docker-nginx
+docker-nginx
+
+root@leolex-VirtualBox:/home/leolex/www# docker image list
+REPOSITORY     TAG       IMAGE ID       CREATED          SIZE
+leolex/nginx   v1        a77dffe3cd6f   13 minutes ago   142MB
+nginx          latest    55f4b40fe486   12 days ago      142MB
+root@leolex-VirtualBox:/home/leolex/www# docker rmi a77dffe3cd6f
+Untagged: leolex/nginx:v1
+Untagged: leolex/nginx@sha256:78f354c4a78a465c481c5ae17c8e473caff68d0cd35b3e8832d32dd164f4c57b
+Deleted: sha256:a77dffe3cd6ff1644e67a337d67d431885db6fe8ba02727b00961133b480b44d
+Deleted: sha256:10ca78320030b059b18653f870d07b20b7f95a1196e885b09b225ab6344523db
+root@leolex-VirtualBox:/home/leolex/www# docker image list
+REPOSITORY   TAG       IMAGE ID       CREATED       SIZE
+nginx        latest    55f4b40fe486   12 days ago   142MB
+root@leolex-VirtualBox:/home/leolex/www# docker rmi 55f4b40fe486
+Untagged: nginx:latest
+Untagged: nginx@sha256:10f14ffa93f8dedf1057897b745e5ac72ac5655c299dade0aa434c71557697ea
+Deleted: sha256:55f4b40fe486a5b734b46bb7bf28f52fa31426bf23be068c8e7b19e58d9b8deb
+Deleted: sha256:5f58fed9b4d8e6c09cdc42eed6de6df7a7e35b40d92c98f30f8ecad4960fb7a0
+Deleted: sha256:8bb72c1d014292ebf1ae348a77624c536e766757356c6dbb0de75122a94b445d
+Deleted: sha256:cc9ac0adbded956d924bcf6c26ffbc93ea070019be1437d204b530a033ff4b16
+Deleted: sha256:30f210588f35917f0edb5a2465db7ad60e4ef3b6ac74fe155474e14e6f0995c5
+Deleted: sha256:5ecd5431cf49a2a11115844de1e7b23b9535be8789add9ab50973867db5f7d36
+Deleted: sha256:08249ce7456a1c0613eafe868aed936a284ed9f1d6144f7d2d08c514974a2af9
+
+root@leolex-VirtualBox:/home/leolex/www# docker image list
+REPOSITORY     TAG       IMAGE ID       CREATED          SIZE
+leolex/nginx   v1        a77dffe3cd6f   18 minutes ago   142MB
+
+root@leolex-VirtualBox:/home/leolex/www# docker run --name docker-nginx -d -p 81:80  leolex/nginx:v1
+d1d254ff6e64994506f71fab51e3dc94bdb7b61c1312997dddd5bc6dabf72add
+
+https://hub.docker.com/r/leolex/nginx
+
+![Screenshot](https://github.com/leolex/devops-netology/raw/main/screen/HW5.3_Task1.png)
+
+Задача 2
+Посмотрите на сценарий ниже и ответьте на вопрос: "Подходит ли в этом сценарии использование Docker контейнеров или лучше подойдет виртуальная машина, физическая машина? Может быть возможны разные варианты?"
+
+Детально опишите и обоснуйте свой выбор.
+
+--
+
+Сценарий:
+
+Высоконагруженное монолитное java веб-приложение;
+Nodejs веб-приложение;
+Мобильное приложение c версиями для Android и iOS;
+Шина данных на базе Apache Kafka;
+Elasticsearch кластер для реализации логирования продуктивного веб-приложения - три ноды elasticsearch, два logstash и две ноды kibana;
+Мониторинг-стек на базе Prometheus и Grafana;
+MongoDB, как основное хранилище данных для java-приложения;
+Gitlab сервер для реализации CI/CD процессов и приватный (закрытый) Docker Registry.
+
+Высоконагруженное монолитное java веб-приложение;
+Физический сервер, так как монолитное приложение не предполагает изменение кода, все компоненты находятся в одном месте, требуется максимальная утилизация аппаратных ресурсов.
+
+Nodejs веб-приложение;
+Лучше всего подойдёт использование Docker контейнеров, так как node.js является компонентом (сервисом), работающим с javascript, поэтому данный модуль можно легко разместить в контейнере, он отлично вписывается в концепцию микросервисной архитектуры.
+
+Мобильное приложение c версиями для Android и iOS;
+Виртуальные машины, так как разные ОС, а также данные приложения предполагают свои для каждого случая интерфейсы в сторону пользователя.
+
+Шина данных на базе Apache Kafka;
+Docker Контейнеры. Шина данных предполагает использование микросервисной архитектуры. Кроме того Apache Kafka, на сколько я понимаю, это сервис, поэтому лучше всего запускать данный сервис в контейнере. Исключением может быть случай связанный с высокой важностью передаваемых данных. В этом случае нужно позаботиться о резервировании или ипользовать ВМ. 
+
+Elasticsearch кластер для реализации логирования продуктивного веб-приложения - три ноды elasticsearch, два logstash и две ноды kibana;
+Docker контейнер. На Docker hub уже есть готовые образы, с помощью которых можно запустить три разных контейнера. Их можно соединить в кластер, при необхдимости. Если речь идет о тестовой среде, то однозначно удобнее использовать контейнеры. Если о продакшн, то компоненты, в особенности elasticsearch, можно поднять на виртуалках, чтобы повысить отказоустойчивость.
+
+Мониторинг-стек на базе prometheus и grafana;
+Docker контейнер. Так как данные приложения не хранят данные, то лучше использовать контейнеры. Использование контейнеров такжже дает преимущество с точки зрения модификации системы мониторинга.
+
+MongoDB, как основное хранилище данных для java-приложения;
+Для хранения данных БД лучше подходит виртуальная машина. К тому же не указано, что система высоконагруженная, поэтому оптимальны вариантом будет ВМ.
+
+Gitlab сервер для реализации CI/CD процессов и приватный (закрытый) Docker Registry.
+ВМ или физический сервер, так как требуется хранение данных. С точки зрения масштабирования лучше будет использовать ВМ. 
+
+
+
+Задача 3
+Запустите первый контейнер из образа centos c любым тэгом в фоновом режиме, подключив папку /data из текущей рабочей директории на хостовой машине в /data контейнера;
+Запустите второй контейнер из образа debian в фоновом режиме, подключив папку /data из текущей рабочей директории на хостовой машине в /data контейнера;
+Подключитесь к первому контейнеру с помощью docker exec и создайте текстовый файл любого содержания в /data;
+Добавьте еще один файл в папку /data на хостовой машине;
+Подключитесь во второй контейнер и отобразите листинг и содержание файлов в /data контейнера.
+
+Запускаем контейнер centos с именем docker-centos в фоне и пробрасываем сразу tty, а также подключаем папку /data
+root@leolex-VirtualBox:/home/leolex/www/data# docker run --name docker-centos -d -t  -v /data:/data centos
+9fefb93152055fd92916debb166192270c154820d5bb634ab97511dab8cf2059
+root@leolex-VirtualBox:/home/leolex/www/data# docker ps
+CONTAINER ID   IMAGE             COMMAND                  CREATED         STATUS         PORTS                               NAMES
+9fefb9315205   centos            "/bin/bash"              5 seconds ago   Up 5 seconds                                       docker-centos
+
+йл
+Запускаем контейнер debian с именем docker-debian в фоне и пробрасываем сразу tty, а также подключаем папку /data
+root@leolex-VirtualBox:/home/leolex/www/data# docker run --name docker-debian -d -t  -v /data:/data debian
+Unable to find image 'debian:latest' locally
+latest: Pulling from library/debian
+1339eaac5b67: Pull complete 
+Digest: sha256:859ea45db307402ee024b153c7a63ad4888eb4751921abbef68679fc73c4c739
+Status: Downloaded newer image for debian:latest
+e2ddc9a826f1c0a306b6e9530a6a60c40e6d5df16ccf955f134ccb5f1aff551b
+root@leolex-VirtualBox:/home/leolex/www/data# docker ps
+CONTAINER ID   IMAGE             COMMAND                  CREATED              STATUS              PORTS                               NAMES
+e2ddc9a826f1   debian            "bash"                   5 seconds ago        Up 4 seconds                                            docker-debian
+9fefb9315205   centos            "/bin/bash"              About a minute ago   Up About a minute                                       docker-centos
+
+Заходим в контейнер centos и создаем файл
+root@leolex-VirtualBox:/home/leolex/www/data# docker exec -ti 9fefb9315205 bash
+[root@9fefb9315205 /]# cd data
+[root@9fefb9315205 data]# touch centos_file
+[root@9fefb9315205 data]# echo 'test'  > /data/centos_file
+[root@9fefb9315205 data]# cat centos_file
+test
+[root@9fefb9315205 data]# exit
+exit
+
+Создаём файл на хостовой машине
+root@leolex-VirtualBox:/home/leolex/www/data# cd /data
+root@leolex-VirtualBox:/data# touch host_file
+root@leolex-VirtualBox:/data# echo test_host > /data/host_file
+
+Проверяем файл на контейнере debian
+root@leolex-VirtualBox:/data# docker exec -ti e2ddc9a826f1 bash
+root@e2ddc9a826f1:/# cd /data
+root@e2ddc9a826f1:/data# ls -la
+total 16
+drwxr-xr-x 2 root root 4096 Jul  6 12:37 .
+drwxr-xr-x 1 root root 4096 Jul  6 12:33 ..
+-rw-r--r-- 1 root root    5 Jul  6 12:37 centos_file
+-rw-r--r-- 1 root root   10 Jul  6 12:38 host_file
+root@e2ddc9a826f1:/data# cat centos_file 
+test
+root@e2ddc9a826f1:/data# cat host_file 
+test_host
+root@e2ddc9a826f1:/data# 
+
+
+
+
+Задача 4 (*)
+Воспроизвести практическую часть лекции самостоятельно.
+Соберите Docker образ с Ansible, загрузите на Docker Hub и пришлите ссылку вместе с остальными ответами к задачам.
+
+root@leolex-VirtualBox:/home/leolex/www/data# docker build -t leolex/ansible:1.0.0 .
+Sending build context to Docker daemon  4.096kB
+Step 1/5 : FROM alpine:3.14
+3.14: Pulling from library/alpine
+8663204ce13b: Pull complete 
+Digest: sha256:06b5d462c92fc39303e6363c65e074559f8d6b1363250027ed5053557e3398c5
+Status: Downloaded newer image for alpine:3.14
+ ---> e04c818066af
+..................
+
+root@leolex-VirtualBox:/home/leolex/www/data# docker image list
+REPOSITORY       TAG       IMAGE ID       CREATED              SIZE
+leolex/ansible   1.0.0     9ef80d6b84a1   About a minute ago   380MB
+leolex/nginx     v1        a77dffe3cd6f   22 hours ago         142MB
+nginx            latest    55f4b40fe486   13 days ago          142MB
+debian           latest    d2780094a226   13 days ago          124MB
+alpine           3.14      e04c818066af   3 months ago         5.59MB
+centos           latest    5d0da3dc9764   9 months ago         231MB
+root@leolex-VirtualBox:/home/leolex/www/data# docker push leolex/ansible:1.0.0
+The push refers to repository [docker.io/leolex/ansible]
+24b5fb0278c2: Pushed 
+b8d957d45378: Pushed 
+b541d28bf3b4: Mounted from library/alpine 
+1.0.0: digest: sha256:1aaaeaf59f8239358b2c2c1d98ed96b3d4009eb99afffbf8398fadccd4e39308 size: 947
+
+http://hub.docker.com/r/leolex/ansible
+
+
+
+
+
+
+***************************************************************************************************************************************************************************************************************************
+
 5.2. Применение принципов IaaC в работе с виртуальными машинами
 
 Задача 1

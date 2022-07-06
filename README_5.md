@@ -138,7 +138,7 @@ d1d254ff6e64994506f71fab51e3dc94bdb7b61c1312997dddd5bc6dabf72add
 
 https://hub.docker.com/r/leolex/nginx
 
-![Screenshot](https://github.com/leolex/devops-netology/raw/main/screen/HW5.3_Task1.png)
+![Screenshot](https://github.com/leolex/devops-netology/blob/main/screen/HW5.3_Task1.png)
 
 Задача 2
 Посмотрите на сценарий ниже и ответьте на вопрос: "Подходит ли в этом сценарии использование Docker контейнеров или лучше подойдет виртуальная машина, физическая машина? Может быть возможны разные варианты?"

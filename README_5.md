@@ -140,7 +140,43 @@ https://hub.docker.com/r/leolex/nginx
   
 ![Screenshot](https://github.com/le0lex/devops-netology/blob/main/screen/HW5.3_Task1.png)  
   
+
+Замечание  
+Задание 1  
+Подмену стартовой страницы нужно произвести в докерфайле. Попробуете?  
   
+root@leolex-VirtualBox:/home/leolex/www# cat Dockerfile     
+FROM nginx  
+COPY . ./usr/share/nginx/html  
+  
+root@leolex-VirtualBox:/home/leolex/www# docker build -t leolex/nginx:2.0.0 .  
+Sending build context to Docker daemon  6.656kB  
+Step 1/2 : FROM nginx  
+ ---> 55f4b40fe486    
+Step 2/2 : COPY . ./usr/share/nginx/html    
+ ---> 211632d11463   
+Successfully built 211632d11463    
+Successfully tagged leolex/nginx:2.0.0    
+  
+root@leolex-VirtualBox:/home/leolex/www# docker image list   
+REPOSITORY       TAG       IMAGE ID       CREATED          SIZE  
+leolex/nginx     2.0.0     211632d11463   57 seconds ago   142MB  
+leolex/ansible   1.0.0     9ef80d6b84a1   25 hours ago     380MB  
+leolex/nginx     v1        a77dffe3cd6f   47 hours ago     142MB  
+nginx            latest    55f4b40fe486   2 weeks ago      142MB  
+debian           latest    d2780094a226   2 weeks ago      124MB  
+alpine           3.14      e04c818066af   3 months ago     5.59MB  
+centos           latest    5d0da3dc9764   9 months ago     231MB  
+root@leolex-VirtualBox:/home/leolex/www# docker run --name docker-nginx-v2 -d -p 81:80 leolex/nginx:2.0.0  
+df6093870603feac39a38ab169ab017a73d45e08910f585ad2e1c73ed7ffc54f  
+root@leolex-VirtualBox:/home/leolex/www# docker ps  
+CONTAINER ID   IMAGE                COMMAND                  CREATED         STATUS         PORTS                               NAMES  
+df6093870603   leolex/nginx:2.0.0   "/docker-entrypoint.…"   6 seconds ago   Up 6 seconds   0.0.0.0:81->80/tcp, :::81->80/tcp   docker-nginx-v2  
+
+Результат тот же, но теперь подмена стратовой страницы просиходит при сборке контейнера.   
+
+https://hub.docker.com/r/leolex/nginx version 2.0.0  
+
   
 Задача 2  
 Посмотрите на сценарий ниже и ответьте на вопрос: "Подходит ли в этом сценарии использование Docker контейнеров или лучше подойдет виртуальная машина, физическая машина? Может быть возможны разные варианты?"  

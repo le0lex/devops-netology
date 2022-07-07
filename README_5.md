@@ -140,6 +140,8 @@ https://hub.docker.com/r/leolex/nginx
 
 ![Screenshot](https://github.com/le0lex/devops-netology/blob/main/screen/HW5.3_Task1.png)
 
+
+
 Задача 2
 Посмотрите на сценарий ниже и ответьте на вопрос: "Подходит ли в этом сценарии использование Docker контейнеров или лучше подойдет виртуальная машина, физическая машина? Может быть возможны разные варианты?"
 
@@ -185,28 +187,28 @@ Gitlab сервер для реализации CI/CD процессов и пр
 
 
 Задача 3
-Запустите первый контейнер из образа centos c любым тэгом в фоновом режиме, подключив папку /data из текущей рабочей директории на хостовой машине в /data контейнера;
-Запустите второй контейнер из образа debian в фоновом режиме, подключив папку /data из текущей рабочей директории на хостовой машине в /data контейнера;
-Подключитесь к первому контейнеру с помощью docker exec и создайте текстовый файл любого содержания в /data;
-Добавьте еще один файл в папку /data на хостовой машине;
+Запустите первый контейнер из образа centos c любым тэгом в фоновом режиме, подключив папку "/data" из текущей рабочей директории на хостовой машине в "/data: контейнера;
+Запустите второй контейнер из образа debian в фоновом режиме, подключив папку "/data" из текущей рабочей директории на хостовой машине в "/data" контейнера;
+Подключитесь к первому контейнеру с помощью docker exec и создайте текстовый файл любого содержания в "/data";
+Добавьте еще один файл в папку "/data" на хостовой машине;
 Подключитесь во второй контейнер и отобразите листинг и содержание файлов в /data контейнера.
 
-Запускаем контейнер centos с именем docker-centos в фоне и пробрасываем сразу tty, а также подключаем папку /data
+Запускаем контейнер centos с именем docker-centos в фоне и пробрасываем сразу tty, а также подключаем папку "/data"
+
 root@leolex-VirtualBox:/home/leolex/www/data# docker run --name docker-centos -d -t  -v /data:/data centos
 9fefb93152055fd92916debb166192270c154820d5bb634ab97511dab8cf2059
 root@leolex-VirtualBox:/home/leolex/www/data# docker ps
 CONTAINER ID   IMAGE             COMMAND                  CREATED         STATUS         PORTS                               NAMES
 9fefb9315205   centos            "/bin/bash"              5 seconds ago   Up 5 seconds                                       docker-centos
 
-йл
 Запускаем контейнер debian с именем docker-debian в фоне и пробрасываем сразу tty, а также подключаем папку /data
 root@leolex-VirtualBox:/home/leolex/www/data# docker run --name docker-debian -d -t  -v /data:/data debian
 Unable to find image 'debian:latest' locally
 latest: Pulling from library/debian
-1339eaac5b67: Pull complete 
+1339eaac5b67: Pull complete
 Digest: sha256:859ea45db307402ee024b153c7a63ad4888eb4751921abbef68679fc73c4c739
 Status: Downloaded newer image for debian:latest
-e2ddc9a826f1c0a306b6e9530a6a60c40e6d5df16ccf955f134ccb5f1aff551b
+2ddc9a826f1c0a306b6e9530a6a60c40e6d5df16ccf955f134ccb5f1aff551b
 root@leolex-VirtualBox:/home/leolex/www/data# docker ps
 CONTAINER ID   IMAGE             COMMAND                  CREATED              STATUS              PORTS                               NAMES
 e2ddc9a826f1   debian            "bash"                   5 seconds ago        Up 4 seconds                                            docker-debian

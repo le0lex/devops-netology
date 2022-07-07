@@ -193,60 +193,60 @@ Gitlab сервер для реализации CI/CD процессов и пр
 Добавьте еще один файл в папку "/data" на хостовой машине;
 Подключитесь во второй контейнер и отобразите листинг и содержание файлов в /data контейнера.
 
-Запускаем контейнер centos с именем docker-centos в фоне и пробрасываем сразу tty, а также подключаем папку "/data"
+Запускаем контейнер centos с именем docker-centos в фоне и пробрасываем сразу tty, а также подключаем папку "/data"  
+  
+root@leolex-VirtualBox:/home/leolex/www/data# docker run --name docker-centos -d -t  -v /data:/data centos  
+9fefb93152055fd92916debb166192270c154820d5bb634ab97511dab8cf2059  
+root@leolex-VirtualBox:/home/leolex/www/data# docker ps  
+CONTAINER ID   IMAGE             COMMAND                  CREATED         STATUS         PORTS                               NAMES  
+9fefb9315205   centos            "/bin/bash"              5 seconds ago   Up 5 seconds                                       docker-centos  
 
-root@leolex-VirtualBox:/home/leolex/www/data# docker run --name docker-centos -d -t  -v /data:/data centos
-9fefb93152055fd92916debb166192270c154820d5bb634ab97511dab8cf2059
-root@leolex-VirtualBox:/home/leolex/www/data# docker ps
-CONTAINER ID   IMAGE             COMMAND                  CREATED         STATUS         PORTS                               NAMES
-9fefb9315205   centos            "/bin/bash"              5 seconds ago   Up 5 seconds                                       docker-centos
-
-Запускаем контейнер debian с именем docker-debian в фоне и пробрасываем сразу tty, а также подключаем папку /data
-root@leolex-VirtualBox:/home/leolex/www/data# docker run --name docker-debian -d -t  -v /data:/data debian
-Unable to find image 'debian:latest' locally
-latest: Pulling from library/debian
-1339eaac5b67: Pull complete
-Digest: sha256:859ea45db307402ee024b153c7a63ad4888eb4751921abbef68679fc73c4c739
-Status: Downloaded newer image for debian:latest
-2ddc9a826f1c0a306b6e9530a6a60c40e6d5df16ccf955f134ccb5f1aff551b
-root@leolex-VirtualBox:/home/leolex/www/data# docker ps
-CONTAINER ID   IMAGE             COMMAND                  CREATED              STATUS              PORTS                               NAMES
-e2ddc9a826f1   debian            "bash"                   5 seconds ago        Up 4 seconds                                            docker-debian
-9fefb9315205   centos            "/bin/bash"              About a minute ago   Up About a minute                                       docker-centos
-
-Заходим в контейнер centos и создаем файл
-root@leolex-VirtualBox:/home/leolex/www/data# docker exec -ti 9fefb9315205 bash
-[root@9fefb9315205 /]# cd data
-[root@9fefb9315205 data]# touch centos_file
-[root@9fefb9315205 data]# echo 'test'  > /data/centos_file
-[root@9fefb9315205 data]# cat centos_file
-test
-[root@9fefb9315205 data]# exit
-exit
-
-Создаём файл на хостовой машине
-root@leolex-VirtualBox:/home/leolex/www/data# cd /data
-root@leolex-VirtualBox:/data# touch host_file
-root@leolex-VirtualBox:/data# echo test_host > /data/host_file
-
-Проверяем файл на контейнере debian
-root@leolex-VirtualBox:/data# docker exec -ti e2ddc9a826f1 bash
-root@e2ddc9a826f1:/# cd /data
-root@e2ddc9a826f1:/data# ls -la
-total 16
-drwxr-xr-x 2 root root 4096 Jul  6 12:37 .
-drwxr-xr-x 1 root root 4096 Jul  6 12:33 ..
--rw-r--r-- 1 root root    5 Jul  6 12:37 centos_file
--rw-r--r-- 1 root root   10 Jul  6 12:38 host_file
-root@e2ddc9a826f1:/data# cat centos_file 
-test
-root@e2ddc9a826f1:/data# cat host_file 
-test_host
-root@e2ddc9a826f1:/data# 
-
-
-
-
+Запускаем контейнер debian с именем docker-debian в фоне и пробрасываем сразу tty, а также подключаем папку /data  
+root@leolex-VirtualBox:/home/leolex/www/data# docker run --name docker-debian -d -t  -v /data:/data debian  
+Unable to find image 'debian:latest' locally  
+latest: Pulling from library/debian  
+1339eaac5b67: Pull complete  
+Digest: sha256:859ea45db307402ee024b153c7a63ad4888eb4751921abbef68679fc73c4c739  
+Status: Downloaded newer image for debian:latest  
+2ddc9a826f1c0a306b6e9530a6a60c40e6d5df16ccf955f134ccb5f1aff551b  
+root@leolex-VirtualBox:/home/leolex/www/data# docker ps  
+CONTAINER ID   IMAGE             COMMAND                  CREATED              STATUS              PORTS                               NAMES  
+e2ddc9a826f1   debian            "bash"                   5 seconds ago        Up 4 seconds                                            docker-debian  
+9fefb9315205   centos            "/bin/bash"              About a minute ago   Up About a minute                                       docker-centos  
+  
+Заходим в контейнер centos и создаем файл  
+root@leolex-VirtualBox:/home/leolex/www/data# docker exec -ti 9fefb9315205 bash  
+[root@9fefb9315205 /]# cd data  
+[root@9fefb9315205 data]# touch centos_file  
+[root@9fefb9315205 data]# echo 'test'  > /data/centos_file  
+[root@9fefb9315205 data]# cat centos_file  
+test  
+[root@9fefb9315205 data]# exit  
+exit  
+  
+Создаём файл на хостовой машине  
+root@leolex-VirtualBox:/home/leolex/www/data# cd /data  
+root@leolex-VirtualBox:/data# touch host_file  
+root@leolex-VirtualBox:/data# echo test_host > /data/host_file  
+  
+Проверяем файл на контейнере debian   
+root@leolex-VirtualBox:/data# docker exec -ti e2ddc9a826f1 bash  
+root@e2ddc9a826f1:/# cd /data  
+root@e2ddc9a826f1:/data# ls -la  
+total 16  
+drwxr-xr-x 2 root root 4096 Jul  6 12:37 .  
+drwxr-xr-x 1 root root 4096 Jul  6 12:33 ..  
+-rw-r--r-- 1 root root    5 Jul  6 12:37 centos_file  
+-rw-r--r-- 1 root root   10 Jul  6 12:38 host_file  
+root@e2ddc9a826f1:/data# cat centos_file   
+test  
+root@e2ddc9a826f1:/data# cat host_file   
+test_host  
+root@e2ddc9a826f1:/data#   
+  
+  
+  
+  
 Задача 4 (*)
 Воспроизвести практическую часть лекции самостоятельно.
 Соберите Docker образ с Ansible, загрузите на Docker Hub и пришлите ссылку вместе с остальными ответами к задачам.

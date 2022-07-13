@@ -1,3 +1,86 @@
+5.4. Оркестрация группой Docker контейнеров на примере Docker Compose
+
+Задача 1 
+
+Создать собственный образ операционной системы с помощью Packer.   
+
+Для получения зачета, вам необходимо предоставить:   
+
+Скриншот страницы, как на слайде из презентации (слайд 37).   
+   
+
+Ответ:   
+
+[C:\Users\ealekza\OneDrive - Ericsson AB\Личное\Нетология\packer_1.8.0_windows_amd64]$ yc vpc network create --name net --labels my-label=netology --description "my first netwrok via yc"
+id: enp0qou84vddvhel3pua
+folder_id: b1g0gv9upgikeuveglj5
+created_at: "2022-07-11T09:44:41Z"
+name: net
+description: my first netwrok via yc
+labels:
+  my-label: netology
+
+
+[C:\Users\ealekza\OneDrive - Ericsson AB\Личное\Нетология\packer_1.8.0_windows_amd64]$ yc vpc subnet create --name my-subnet-a --zone ru-central1-a --range 10.1.2.0/24 --network-name net --description "my first subnet via yc"
+id: e9buv9hkhv0nt8mljqei
+folder_id: b1g0gv9upgikeuveglj5
+created_at: "2022-07-11T09:47:31Z"
+name: my-subnet-a
+description: my first subnet via yc
+network_id: enp0qou84vddvhel3pua
+zone_id: ru-central1-a
+v4_cidr_blocks:
+  - 10.1.2.0/24
+
+[C:\Users\ealekza\OneDrive - Ericsson AB\Личное\Нетология\packer_1.8.0_windows_amd64]$ yc config list
+token: AQAAAAAMsX6fAATuwWHveRAUZEVammXEyQQ7Ves
+cloud-id: b1ge7enf5de1k75hpn8d
+folder-id: b1g0gv9upgikeuveglj5
+compute-default-zone: ru-central1-a
+
+![Screenshot](https://github.com/le0lex/devops-netology/blob/main/screen/HW_5.4_task1.png)  
+
+
+[C:\Users\ealekza\OneDrive - Ericsson AB\Личное\Нетология\packer_1.8.0_windows_amd64]$ yc compute image list  
++----------------------+---------------+--------+----------------------+--------+  
+|          ID          |     NAME      | FAMILY |     PRODUCT IDS      | STATUS |  
++----------------------+---------------+--------+----------------------+--------+  
+| fd81bag6mifcp4m29jrn | centos-7-base | centos | f2euv1kekdgvc0jrpaet | READY  |  
++----------------------+---------------+--------+----------------------+--------+  
+
+
+
+Задача 2  
+Создать вашу первую виртуальную машину в Яндекс.Облаке.  
+  
+[C:\Users\ealekza\OneDrive - Ericsson AB\Личное\Нетология\packer_1.8.0_windows_amd64]$ yc compute instance create --name my-yc-instance --network-interface subnet-name=my-subnet-a --zone ru-central1-a  
+
+![Screenshot](https://github.com/le0lex/devops-netology/blob/main/screen/HW_5.4_task2.png)
+
+![Screenshot](https://github.com/le0lex/devops-netology/blob/main/screen/HW_5.4_task2_3.png)
+with terraform
+
+
+
+Задача 3  
+Создать ваш первый готовый к боевой эксплуатации компонент мониторинга, состоящий из стека микросервисов.  
+  
+Для получения зачета, вам необходимо предоставить:  
+  
+Скриншот работающего веб-интерфейса Grafana с текущими метриками, как на примере ниже  
+
+![Screenshot](https://github.com/le0lex/devops-netology/blob/main/screen/HW_5.4_task3_1.png)
+![Screenshot](https://github.com/le0lex/devops-netology/blob/main/screen/HW_5.4_task3_2.png)
+
+
+
+
+
+
+  
+
+***********************************************************************************************************
+
 5.3. Введение. Экосистема. Архитектура. Жизненный цикл Docker контейнера
 
 Задача 1

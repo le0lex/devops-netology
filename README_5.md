@@ -38,7 +38,7 @@ cloud-id: b1ge7enf5de1k75hpn8d
 folder-id: b1g0gv9upgikeuveglj5
 compute-default-zone: ru-central1-a
 
-![Screenshot](https://github.com/le0lex/devops-netology/blob/main/screen/HW_5.4_task1.png)  
+![Screenshot](https://github.com/le0lex/devops-netology/blob/main/screen/HW_5.4_task1.PNG)  
 
 
 [C:\Users\ealekza\OneDrive - Ericsson AB\Личное\Нетология\packer_1.8.0_windows_amd64]$ yc compute image list  
@@ -53,9 +53,11 @@ compute-default-zone: ru-central1-a
 Задача 2  
 Создать вашу первую виртуальную машину в Яндекс.Облаке.  
   
+Ответ:  
+
 [C:\Users\ealekza\OneDrive - Ericsson AB\Личное\Нетология\packer_1.8.0_windows_amd64]$ yc compute instance create --name my-yc-instance --network-interface subnet-name=my-subnet-a --zone ru-central1-a  
 
-![Screenshot](https://github.com/le0lex/devops-netology/blob/main/screen/HW_5.4_task2.png)
+![Screenshot](https://github.com/le0lex/devops-netology/blob/main/screen/HW_5.4_task2.PNG)
 
 ![Screenshot](https://github.com/le0lex/devops-netology/blob/main/screen/HW_5.4_task2_3.png)
 with terraform
@@ -69,11 +71,13 @@ with terraform
   
 Скриншот работающего веб-интерфейса Grafana с текущими метриками, как на примере ниже  
 
+Ответ:
+
 ![Screenshot](https://github.com/le0lex/devops-netology/blob/main/screen/HW_5.4_task3_1.png)
 ![Screenshot](https://github.com/le0lex/devops-netology/blob/main/screen/HW_5.4_task3_2.png)
 
-
-
+  
+  
 
 
 

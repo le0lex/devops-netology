@@ -1,3 +1,77 @@
+5.5. Оркестрация кластером Docker контейнеров на примере Docker Swarm  
+
+ Дайте письменые ответы на следующие вопросы: В чём отличие режимов работы сервисов в Docker Swarm кластере:   replication и global? Какой алгоритм выбора лидера используется в Docker Swarm кластере? Что такое Overlay Network?  
+ 
+ Ответ:  
+ 
+ Global - режим, в котором сервис по умолчанию равертывается на каждой ноде.  
+ Replication - режим, при котором сервис развертывается только на части нод, указанных в файлах конфигурации.  
+ 
+ В Docker Swarm используется алгоритм RAFT для выбора лидера. Его суть в том, что спустя определенный таймаут, каждая нода посылает запрос соседям (их количество заранее известно, как я понял), и при получении ответа от большинства соседей, становится лидером. Кто первый запрос послал, тот лидером и стал. Если две ноды одновременно посылают запрос и количество ответов недостаточно, чтобы чтобы стать лидером, то процесс выбора лидера повторяется. После того, как лидер определен, он посылает постоянные апдейты или хартбит, чтобы уведомить соседей, что он доступен. Если сосдеди не получают апдейт, то для них начинается таймаут и процесс выбора лидера.
+ 
+ Overlay Network - тип логической сети, работает на основе технологии vxlan и поддерживает шифрование. Данная технология используется для решение проблем масшабируемости сетей. VXLAN — это технология или протокол туннелирования, который инкапсулирует L2 кадры внутри UDP-пакетов, обычно отправляемых на порт 4789. В случае с микросервисной архитекрурой, такой тип сети позволяет свободно общаться контейнерам между собой на разных нодах, не смотря на то, что они могут находиться в разных сегментах сети, но это не проблема так как vxlan предполагает применение l2 поверх l3, то есть с точки зрения контейнеров, это получается один и тот же сссегмент. Маршрутизацией в данном случае занимается сам docker.
+  
+  
+   
+Задача 2  
+Создать ваш первый Docker Swarm кластер в Яндекс.Облаке  
+Для получения зачета, вам необходимо предоставить скриншот из терминала (консоли), с выводом команды:  
+docker node ls  
+
+![Screenshot](https://github.com/le0lex/devops-netology/blob/main/screen/HW_5.5_task2.png)  
+
+  
+
+  
+Задача 3  
+Создать ваш первый, готовый к боевой эксплуатации кластер мониторинга, состоящий из стека микросервисов.  
+Для получения зачета, вам необходимо предоставить скриншот из терминала (консоли), с выводом команды:  
+docker service ls  
+  
+![Screenshot](https://github.com/le0lex/devops-netology/blob/main/screen/HW_5.5_task3.png)
+  
+
+
+  Задача 4 (*)  
+Выполнить на лидере Docker Swarm кластера команду (указанную ниже) и дать письменное описание её функционала, что она делает и зачем она нужна:  
+  
+# см.документацию: https://docs.docker.com/engine/swarm/swarm_manager_locking/  
+docker swarm update --autolock=true  
+
+
+[centos@node01 ~]$ sudo docker swarm update --autolock=true  
+Swarm updated.  
+To unlock a swarm manager after it restarts, run the `docker swarm unlock`  
+command and provide the following key:  
+  
+    SWMKEY-1-AAxjVgi29gx3HiLV08o58/49MpDzfWY1eE8kpkLgt3A  
+  
+Please remember to store this key in a password manager, since without it you  
+will not be able to restart the manager.  
+  
+[centos@node01 ~]$ sudo shutdown -r now  
+Connection to 51.250.84.237 closed by remote host.  
+Connection to 51.250.84.237 closed.  
+leolex@leolex-VirtualBox:~/terraform$ ssh centos@51.250.84.237  
+[centos@node01 ~]$ sudo docker node list  
+Error response from daemon: Swarm is encrypted and needs to be unlocked before it can be used. Please use "docker   swarm unlock" to unlock it.  
+  
+[centos@node01 ~]$ sudo docker swarm unlock  
+Please enter unlock key:   
+  
+[centos@node01 ~]$ sudo docker node list  
+ID                            HOSTNAME             STATUS    AVAILABILITY   MANAGER STATUS   ENGINE VERSION  
+s7dpftfz6y3bpt10kn5uc7nl2 *   node01.netology.yc   Ready     Active         Reachable        20.10.17  
+vlriujpm5qaigcy2ctlggywux     node02.netology.yc   Ready     Active         Reachable        20.10.17  
+67943ijv8hgj1ypymp6m9rx3b     node03.netology.yc   Ready     Active         Leader           20.10.17  
+lxrbux4ey7s4ifn5cequh7zkv     node04.netology.yc   Ready     Active                          20.10.17  
+gauq228q4ar4inmj33chj7pdu     node05.netology.yc   Ready     Active                          20.10.17  
+e05xgkfbrhime5cb15pbywf6o     node06.netology.yc   Ready     Active                          20.10.17
+
+  
+
+
+
 5.4. Оркестрация группой Docker контейнеров на примере Docker Compose
 
 Задача 1 

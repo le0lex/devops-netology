@@ -49,17 +49,17 @@ docker service ls
 >Please remember to store this key in a password manager, since without it you  
 >will not be able to restart the manager.  
   
->[centos@node01 ~]$ sudo shutdown -r now  
+>[centos@node01 ]$ sudo shutdown -r now  
 >Connection to 51.250.84.237 closed by remote host.  
 >Connection to 51.250.84.237 closed.  
 >leolex@leolex-VirtualBox:~/terraform$ ssh centos@51.250.84.237  
->[centos@node01 ~]$ sudo docker node list  
+>[centos@node01 ]$ sudo docker node list  
 >Error response from daemon: Swarm is encrypted and needs to be unlocked before it can be used. Please use "docker   swarm unlock" to unlock it.  
   
->[centos@node01 ~]$ sudo docker swarm unlock  
+>[centos@node01 ]$ sudo docker swarm unlock  
 >Please enter unlock key:   
   
->[centos@node01 ~]$ sudo docker node list  
+>[centos@node01 ]$ sudo docker node list  
 >ID                            HOSTNAME             STATUS    AVAILABILITY   MANAGER STATUS   ENGINE VERSION  
 >s7dpftfz6y3bpt10kn5uc7nl2 *   node01.netology.yc   Ready     Active         Reachable        20.10.17  
 >vlriujpm5qaigcy2ctlggywux     node02.netology.yc   Ready     Active         Reachable        20.10.17  

@@ -33,41 +33,45 @@ docker service ls
 
 
   Задача 4 (*)  
-Выполнить на лидере Docker Swarm кластера команду (указанную ниже) и дать письменное описание её функционала, что она делает и зачем она нужна:  
+>Выполнить на лидере Docker Swarm кластера команду (указанную ниже) и дать письменное описание её функционала, что она делает и зачем она нужна:  
   
-# см.документацию: https://docs.docker.com/engine/swarm/swarm_manager_locking/  
-docker swarm update --autolock=true  
+>см.документацию: https://docs.docker.com/engine/swarm/swarm_manager_locking/  
+>docker swarm update --autolock=true  
 
 
-[centos@node01 ~]$ sudo docker swarm update --autolock=true  
-Swarm updated.  
-To unlock a swarm manager after it restarts, run the `docker swarm unlock`  
-command and provide the following key:  
+>[centos@node01 ~]$ sudo docker swarm update --autolock=true  
+>Swarm updated.  
+>To unlock a swarm manager after it restarts, run the `docker swarm unlock`  
+>command and provide the following key:  
   
     SWMKEY-1-AAxjVgi29gx3HiLV08o58/49MpDzfWY1eE8kpkLgt3A  
   
-Please remember to store this key in a password manager, since without it you  
-will not be able to restart the manager.  
+>Please remember to store this key in a password manager, since without it you  
+>will not be able to restart the manager.  
   
-[centos@node01 ~]$ sudo shutdown -r now  
-Connection to 51.250.84.237 closed by remote host.  
-Connection to 51.250.84.237 closed.  
-leolex@leolex-VirtualBox:~/terraform$ ssh centos@51.250.84.237  
-[centos@node01 ~]$ sudo docker node list  
-Error response from daemon: Swarm is encrypted and needs to be unlocked before it can be used. Please use "docker   swarm unlock" to unlock it.  
+>[centos@node01 ~]$ sudo shutdown -r now  
+>Connection to 51.250.84.237 closed by remote host.  
+>Connection to 51.250.84.237 closed.  
+>leolex@leolex-VirtualBox:~/terraform$ ssh centos@51.250.84.237  
+>[centos@node01 ~]$ sudo docker node list  
+>Error response from daemon: Swarm is encrypted and needs to be unlocked before it can be used. Please use "docker   swarm unlock" to unlock it.  
   
-[centos@node01 ~]$ sudo docker swarm unlock  
-Please enter unlock key:   
+>[centos@node01 ~]$ sudo docker swarm unlock  
+>Please enter unlock key:   
   
-[centos@node01 ~]$ sudo docker node list  
-ID                            HOSTNAME             STATUS    AVAILABILITY   MANAGER STATUS   ENGINE VERSION  
-s7dpftfz6y3bpt10kn5uc7nl2 *   node01.netology.yc   Ready     Active         Reachable        20.10.17  
-vlriujpm5qaigcy2ctlggywux     node02.netology.yc   Ready     Active         Reachable        20.10.17  
-67943ijv8hgj1ypymp6m9rx3b     node03.netology.yc   Ready     Active         Leader           20.10.17  
-lxrbux4ey7s4ifn5cequh7zkv     node04.netology.yc   Ready     Active                          20.10.17  
-gauq228q4ar4inmj33chj7pdu     node05.netology.yc   Ready     Active                          20.10.17  
-e05xgkfbrhime5cb15pbywf6o     node06.netology.yc   Ready     Active                          20.10.17
+>[centos@node01 ~]$ sudo docker node list  
+>ID                            HOSTNAME             STATUS    AVAILABILITY   MANAGER STATUS   ENGINE VERSION  
+>s7dpftfz6y3bpt10kn5uc7nl2 *   node01.netology.yc   Ready     Active         Reachable        20.10.17  
+>vlriujpm5qaigcy2ctlggywux     node02.netology.yc   Ready     Active         Reachable        20.10.17  
+>67943ijv8hgj1ypymp6m9rx3b     node03.netology.yc   Ready     Active         Leader           20.10.17  
+>lxrbux4ey7s4ifn5cequh7zkv     node04.netology.yc   Ready     Active                          20.10.17  
+>gauq228q4ar4inmj33chj7pdu     node05.netology.yc   Ready     Active                          20.10.17  
+>e05xgkfbrhime5cb15pbywf6o     node06.netology.yc   Ready     Active                          20.10.17
 
+В Docker 1.13 и выше журналы Raft, используемые менеджерами роя, по умолчанию шифруются на диске. Это шифрование в состоянии покоя защищает конфигурацию и данные вашей службы от злоумышленников, которые получают доступ к зашифрованным журналам Raft. Одна из причин, по которой эта функция была введена, заключалась в поддержке новой функции секретов Docker.  
+  
+Когда Docker перезапускается, и ключ TLS, используемый для шифрования связи между узлами роя, и ключ, используемый для шифрования и дешифрования журналов Raft на диске, загружаются в память каждого узла менеджера. В Docker 1.13 появилась возможность защитить ключ взаимного шифрования TLS и ключ, используемый для шифрования и дешифрования журналов Raft в состоянии покоя, что позволяет вам вступать во владение этими ключами и требовать ручную разблокировку ваших менеджеров. Эта функция называется автоматической блокировкой.  
+То есть после перезапуска swarm надо сначала его разблокировать, используя ключ шифрования ключа.  
   
 
 

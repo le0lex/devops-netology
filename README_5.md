@@ -1,6 +1,6 @@
 # 6.2. SQL #  
 
-##Задание 1    
+## Задание 1    
   
 Используя docker поднимите инстанс PostgreSQL (версию 12) c 2 volume, в который будут складываться данные БД и бэкапы. Приведите получившуюся команду или docker-compose манифест.  
   
@@ -28,7 +28,7 @@ postgres=# \l
     
       
     
-##Задание 2  
+## Задание 2  
   
 ![Screenshot](https://github.com/le0lex/devops-netology/blob/main/screen/HW6.2_task2q.png)
     
@@ -52,7 +52,7 @@ GRANT DELETE ON TABLE public.orders TO "test-simple-user";
 ![Screenshot](https://github.com/le0lex/devops-netology/blob/main/screen/HW6.2_task2.png)
 
     
-##Задание 3  
+## Задание 3  
   
 ![Screenshot](https://github.com/le0lex/devops-netology/blob/main/screen/HW6.2_task3q.png)
 ```
@@ -76,7 +76,7 @@ postgres=# SELECT COUNT(*) FROM clients;
 ![Screenshot](https://github.com/le0lex/devops-netology/blob/main/screen/HW6.2_task3.png)
 
     
-##Задача 4  
+## Задача 4  
   
 ![Screenshot](https://github.com/le0lex/devops-netology/blob/main/screen/HW6.2_task4q.png)
 
@@ -94,7 +94,7 @@ postgres=# SELECT * FROM clients WHERE booking is not null;
 ![Screenshot](https://github.com/le0lex/devops-netology/blob/main/screen/HW6.2_task4.png)
 
   
-##Задача 5  
+## Задача 5  
   
 Получите полную информацию по выполнению запроса выдачи всех пользователей из задачи 4 (используя директиву EXPLAIN).  
 Приведите получившийся результат и объясните что значат полученные значения.  
@@ -112,7 +112,7 @@ postgres=# EXPLAIN SELECT * FROM clients WHERE booking IS NOT NULL;
   
     
   	  
-##Задача 6  
+## Задача 6  
   
 Создайте бэкап БД test_db и поместите его в volume, предназначенный для бэкапов (см. Задачу 1).  
 Остановите контейнер с PostgreSQL (но не удаляйте volumes).  

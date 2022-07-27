@@ -1,3 +1,159 @@
+# 6.2. SQL #  
+
+Задание 1    
+  
+Используя docker поднимите инстанс PostgreSQL (версию 12) c 2 volume, в который будут складываться данные БД и бэкапы. Приведите получившуюся команду или docker-compose манифест.  
+  
+docker run --name pstgre-docker -e POSTGRES_PASSWORD=postgre -it -p 5432:5432 -v volume1:/home/leolex/postgresql/data -v   volume2:/home/leolex/lib/postgresql postgres:12  
+  
+leolex@leolex-VirtualBox:~/packer$ sudo docker ps   
+CONTAINER ID   IMAGE         COMMAND                  CREATED         STATUS         PORTS                                                   NAMES  
+4ff81d707cd5   postgres:12   "docker-entrypoint.s…"   8 minutes ago   Up 8 minutes   0.0.0.0:5431->5431/tcp, :::5431->5431/tcp, 5432/tcp     pstgre-docker  
+  
+leolex@leolex-VirtualBox:~/packer$ sudo docker exec -ti 4ff81d707cd5 psql -U postgres  
+psql (12.11 (Debian 12.11-1.pgdg110+1))  
+Type "help" for help.  
+
+postgres=# \l  
+                                 List of databases  
+   Name    |  Owner   | Encoding |  Collate   |   Ctype    |   Access privileges     
+-----------+----------+----------+------------+------------+-----------------------  
+ postgres  | postgres | UTF8     | en_US.utf8 | en_US.utf8 |   
+ template0 | postgres | UTF8     | en_US.utf8 | en_US.utf8 | =c/postgres          +  
+           |          |          |            |            | postgres=CTc/postgres  
+ template1 | postgres | UTF8     | en_US.utf8 | en_US.utf8 | =c/postgres          +  
+           |          |          |            |            | postgres=CTc/postgres  
+(3 rows)  
+  
+  
+    
+  
+Задание 2  
+  
+![Screenshot](https://github.com/le0lex/devops-netology/blob/main/screen/HW6.2_task2q.png)
+    
+CREATE DATABASE test_db;  
+CREATE ROLE "test-admin-user" SUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT LOGIN;  
+  
+CREATE TABLE orders (id integer, name text, price integer, PRIMARY KEY (id));  
+  
+CREATE TABLE clients (id integer PRIMARY KEY, lastname text, country text, booking integer,	FOREIGN KEY (booking) REFERENCES orders (Id));  
+  
+CREATE ROLE "test-simple-user" NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT LOGIN;  
+GRANT SELECT ON TABLE public.clients TO "test-simple-user";  
+GRANT INSERT ON TABLE public.clients TO "test-simple-user";  
+GRANT UPDATE ON TABLE public.clients TO "test-simple-user";  
+GRANT DELETE ON TABLE public.clients TO "test-simple-user";  
+GRANT SELECT ON TABLE public.orders TO "test-simple-user";  
+GRANT INSERT ON TABLE public.orders TO "test-simple-user";  
+GRANT UPDATE ON TABLE public.orders TO "test-simple-user";  
+GRANT DELETE ON TABLE public.orders TO "test-simple-user";   
+  
+![Screenshot](https://github.com/le0lex/devops-netology/blob/main/screen/HW6.2_task2.png)
+
+    
+Задание 3  
+  
+![Screenshot](https://github.com/le0lex/devops-netology/blob/main/screen/HW6.2_task3q.png)
+
+postgres=# insert into orders VALUES (1, 'Шоколад', 10), (2, 'Принтер', 3000), (3, 'Книга', 500), (4, 'Монитор', 7000), (5, 'Гитара', 4000);
+INSERT 0 5  
+postgres=# SELECT COUNT(*) FROM orders;  
+ count   
+-------  
+     5  
+(1 row)  
+  
+postgres=# insert into clients VALUES (1, 'Иванов Иван Иванович', 'USA'), (2, 'Петров Петр Петрович', 'Canada'), (3, 'Иоганн Себастьян Бах', 'Japan'), (4, 'Ронни Джеймс Дио', 'Russia'), (5, 'Ritchie Blackmore', 'Russia');  
+INSERT 0 5  
+postgres=# SELECT COUNT(*) FROM clients;  
+ count   
+-------  
+     5  
+(1 row)  
+  
+![Screenshot](https://github.com/le0lex/devops-netology/blob/main/screen/HW6.2_task3.png)
+
+    
+Задача 4  
+  
+![Screenshot](https://github.com/le0lex/devops-netology/blob/main/screen/HW6.2_task4q.png)
+
+  
+postgres=# update  clients set booking = 3 where id = 1;  
+UPDATE 1  
+postgres=# update  clients set booking = 4 where id = 2;  
+UPDATE 1  
+postgres=# update  clients set booking = 5 where id = 3;  
+UPDATE 1  
+  
+postgres=# SELECT * FROM clients WHERE booking is not null;  
+    
+![Screenshot](https://github.com/le0lex/devops-netology/blob/main/screen/HW6.2_task4.png)
+
+  
+Задача 5  
+  
+Получите полную информацию по выполнению запроса выдачи всех пользователей из задачи 4 (используя директиву EXPLAIN).  
+Приведите получившийся результат и объясните что значат полученные значения.  
+  
+postgres=# EXPLAIN SELECT * FROM clients WHERE booking IS NOT NULL;  
+                        QUERY PLAN                           
+-----------------------------------------------------------  
+ Seq Scan on clients  (cost=0.00..18.10 rows=806 width=72)  
+   Filter: (booking IS NOT NULL)  
+(2 rows)  
+  
+Пример показывает как работает EXPLAIN. ВИдно. что в выводе команды получаем служебную информацию - фильтре по полю booking и нагрузку (стоимость) исполнения запроса.  
+  
+    
+	  
+Задача 6  
+  
+Создайте бэкап БД test_db и поместите его в volume, предназначенный для бэкапов (см. Задачу 1).  
+Остановите контейнер с PostgreSQL (но не удаляйте volumes).  
+Поднимите новый пустой контейнер с PostgreSQL.  
+Восстановите БД test_db в новом контейнере.  
+Приведите список операций, который вы применяли для бэкапа данных и восстановления.	  
+  
+leolex@leolex-VirtualBox:~/packer$ sudo docker exec -t pstgre-docker pg_dump -U postgres test_db -f /home/leolex/lib/postgresql/db_dump.sql   
+
+leolex@leolex-VirtualBox:~/packer$ sudo docker exec -i pstgre-docker3 psql -U postgres -d test_db -f /home/leolex/lib/postgresql/db_dump.sql  
+SET   
+SET  
+SET  
+SET  
+SET  
+ set_config   
+------------  
+   
+(1 row)  
+  
+SET  
+SET  
+SET  
+SET  
+SET  
+SET  
+CREATE TABLE  
+ALTER TABLE  
+CREATE TABLE  
+ALTER TABLE  
+COPY 5  
+COPY 5  
+ALTER TABLE  
+ALTER TABLE  
+ALTER TABLE  
+GRANT  
+GRANT  
+  
+![Screenshot](https://github.com/le0lex/devops-netology/blob/main/screen/HW6.2_task6.png)
+
+  
+  
+  
+**************************************************************************************************************************    
+    
 # 6.1. Типы и структура СУБД #
 
 ##Задача 1##  

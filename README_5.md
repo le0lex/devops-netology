@@ -1,3 +1,245 @@
+# Домашнее задание к занятию "6.3. MySQL"
+
+## Задача 1
+
+Используя docker поднимите инстанс MySQL (версию 8). Данные БД сохраните в volume.
+
+Изучите [бэкап БД](https://github.com/netology-code/virt-homeworks/tree/master/06-db-03-mysql/test_data) и 
+восстановитесь из него.
+
+Перейдите в управляющую консоль `mysql` внутри контейнера.
+
+Используя команду `\h` получите список управляющих команд.
+
+Найдите команду для выдачи статуса БД и **приведите в ответе** из ее вывода версию сервера БД.
+
+Подключитесь к восстановленной БД и получите список таблиц из этой БД.
+
+**Приведите в ответе** количество записей с `price` > 300.
+
+В следующих заданиях мы будем продолжать работу с данным контейнером.
+  
+  
+```
+ysql> \s
+--------------
+mysql  Ver 8.0.30 for Linux on x86_64 (MySQL Community Server - GPL)
+
+Connection id:		25
+Current database:	
+Current user:		root@localhost
+SSL:			Not in use
+Current pager:		stdout
+Using outfile:		''
+Using delimiter:	;
+Server version:		8.0.30 MySQL Community Server - GPL
+Protocol version:	10
+Connection:		Localhost via UNIX socket
+Server characterset:	utf8mb4
+Db     characterset:	utf8mb4
+Client characterset:	latin1
+Conn.  characterset:	latin1
+UNIX socket:		/var/run/mysqld/mysqld.sock
+Binary data as:		Hexadecimal
+Uptime:			1 hour 2 min 7 sec
+
+Threads: 2  Questions: 80  Slow queries: 0  Opens: 140  Flush tables: 3  Open tables: 58  Queries per second avg: 0.021
+--------------
+
+
+mysql> use test_db;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> \s
+--------------
+mysql  Ver 8.0.30 for Linux on x86_64 (MySQL Community Server - GPL)
+
+Connection id:		25
+Current database:	test_db
+Current user:		root@localhost
+SSL:			Not in use
+Current pager:		stdout
+Using outfile:		''
+Using delimiter:	;
+Server version:		8.0.30 MySQL Community Server - GPL
+Protocol version:	10
+Connection:		Localhost via UNIX socket
+Server characterset:	utf8mb4
+Db     characterset:	utf8mb4
+Client characterset:	latin1
+Conn.  characterset:	latin1
+UNIX socket:		/var/run/mysqld/mysqld.sock
+Binary data as:		Hexadecimal
+Uptime:			1 hour 3 min 52 sec
+
+Threads: 2  Questions: 91  Slow queries: 0  Opens: 162  Flush tables: 3  Open tables: 80  Queries per second avg: 0.023
+--------------
+
+mysql> show tables;
++-------------------+
+| Tables_in_test_db |
++-------------------+
+| orders            |
++-------------------+
+1 row in set (0.00 sec)
+
+
+mysql> select count(*) from orders where price >300;
++----------+
+| count(*) |
++----------+
+|        1 |
++----------+
+1 row in set (0.00 sec)
+```
+  
+Число записей 1  
+    
+	  
+	    
+## Задача 2  
+  
+Создайте пользователя test в БД c паролем test-pass, используя:  
+- плагин авторизации mysql_native_password  
+- срок истечения пароля - 180 дней  
+- количество попыток авторизации - 3 
+- максимальное количество запросов в час - 100  
+- аттрибуты пользователя:  
+    - Фамилия "Pretty"  
+    - Имя "James"  
+
+Предоставьте привелегии пользователю `test` на операции SELECT базы `test_db`.  
+     
+Используя таблицу INFORMATION_SCHEMA.USER_ATTRIBUTES получите данные по пользователю `test` и 
+**приведите в ответе к задаче**.   
+
+```
+mysql> CREATE USER 'test'@'localhost' IDENTIFIED BY 'test-pass' WITH 
+    -> MAX_QUERIES_PER_HOUR 100
+    -> PASSWORD EXPIRE INTERVAL 180 DAY
+    -> FAILED_LOGIN_ATTEMPTS 3
+    -> ATTRIBUTE '{"fname": "James","lname": "Pretty"}';
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> GRANT SELECT ON test_db.orders TO 'test'@'localhost';
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+mysql> SELECT * FROM INFORMATION_SCHEMA.USER_ATTRIBUTES WHERE USER='test';
++------+-----------+---------------------------------------+
+| USER | HOST      | ATTRIBUTE                             |
++------+-----------+---------------------------------------+
+| test | localhost | {"fname": "James", "lname": "Pretty"} |
++------+-----------+---------------------------------------+
+1 row in set (0.00 sec)
+
+```
+  
+  
+    
+## Задача 3  
+   
+Установите профилирование `SET profiling = 1`.  
+Изучите вывод профилирования команд `SHOW PROFILES;`.  
+Исследуйте, какой `engine` используется в таблице БД `test_db` и **приведите в ответе**.  
+Измените `engine` и **приведите время выполнения и запрос на изменения из профайлера в ответе**:  
+- на `MyISAM`  
+- на `InnoDB`  
+  
+```  
+mysql> SET profiling = 1;
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+mysql> SHOW PROFILES;
+Empty set, 1 warning (0.00 sec)
+
+mysql> SHOW TABLE STATUS WHERE NAME = 'orders';
++--------+--------+---------+------------+------+----------------+-------------+-----------------+--------------+-----------+----------------+---------------------+---------------------+------------+--------------------+----------+----------------+---------+
+| Name   | Engine | Version | Row_format | Rows | Avg_row_length | Data_length | Max_data_length | Index_length | Data_free | Auto_increment | Create_time         | Update_time         | Check_time | Collation          | Checksum | Create_options | Comment |
++--------+--------+---------+------------+------+----------------+-------------+-----------------+--------------+-----------+----------------+---------------------+---------------------+------------+--------------------+----------+----------------+---------+
+| orders | InnoDB |      10 | Dynamic    |    5 |           3276 |       16384 |               0 |            0 |         0 |              6 | 2022-07-28 17:19:44 | 2022-07-28 16:21:07 | NULL       | utf8mb4_0900_ai_ci |     NULL |                |         |
++--------+--------+---------+------------+------+----------------+-------------+-----------------+--------------+-----------+----------------+---------------------+---------------------+------------+--------------------+----------+----------------+---------+
+1 row in set (0.00 sec)
+
+mysql> ALTER TABLE orders ENGINE = InnoDB;
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE orders ENGINE = MyISAM;
+Query OK, 5 rows affected (0.02 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> SHOW PROFILES;
++----------+------------+-----------------------------------------+
+| Query_ID | Duration   | Query                                   |
++----------+------------+-----------------------------------------+
+|        1 | 0.00138900 | SHOW TABLE STATUS WHERE NAME = 'orders' |
+|        2 | 0.03288375 | ALTER TABLE orders ENGINE = InnoDB      |
+|        3 | 0.02444700 | ALTER TABLE orders ENGINE = MyISAM      |
++----------+------------+-----------------------------------------+
+3 rows in set, 1 warning (0.00 sec)
+
+mysql> ALTER TABLE orders ENGINE = InnoDB;
+Query OK, 5 rows affected (0.04 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> SHOW PROFILES;
++----------+------------+-----------------------------------------+
+| Query_ID | Duration   | Query                                   |
++----------+------------+-----------------------------------------+
+|        1 | 0.00138900 | SHOW TABLE STATUS WHERE NAME = 'orders' |
+|        2 | 0.03288375 | ALTER TABLE orders ENGINE = InnoDB      |
+|        3 | 0.02444700 | ALTER TABLE orders ENGINE = MyISAM      |
+|        4 | 0.03495125 | ALTER TABLE orders ENGINE = InnoDB      |
++----------+------------+-----------------------------------------+
+4 rows in set, 1 warning (0.00 sec)
+```     
+	    
+		   
+		   
+## Задача 4  
+  
+Изучите файл `my.cnf` в директории /etc/mysql.  
+  
+Измените его согласно ТЗ (движок InnoDB):  
+- Скорость IO важнее сохранности данных  
+- Нужна компрессия таблиц для экономии места на диске  
+- Размер буффера с незакомиченными транзакциями 1 Мб  
+- Буффер кеширования 30% от ОЗУ  
+- Размер файла логов операций 100 Мб  
+  
+Приведите в ответе измененный файл `my.cnf`.  
+  
+Ответ:  
+```
+[mysqld]  
+pid-file        = /var/run/mysqld/mysqld.pid  
+socket          = /var/run/mysqld/mysqld.sock  
+datadir         = /var/lib/mysql  
+secure-file-priv= NULL 
+   
+#IO speed, для приоритета скорости ставим "0"  
+innodb_flush_log_at_trx_commit = 0  
+    
+#Включаем компрессию  
+innodb_file_format=Barracuda   
+
+#Размер буффера с незакомиченными транзакциями 1 Мб  
+innodb_log_buffer_size	= 1M  
+  
+#Буффер кеширования 30% от ОЗУ     
+innodb_buffer_pool_size = 700М   
+  
+#Размер файла логов операций 100 Мб  
+max_binlog_size	= 100M  
+```
+  
+
+
+
+*******************************************************************************************************************************
+  
 # 6.2. SQL #  
 
 ## Задание 1    

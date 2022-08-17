@@ -33,6 +33,8 @@
 ```
 
 ```
+Ответ:
+
 Dockerfile
 FROM centos:7
 LABEL ElasticSearch Lab 6.5 \
@@ -63,8 +65,6 @@ USER elasticsearch
 CMD ["/usr/sbin/init"]
 CMD ["/usr/share/elasticsearch/bin/elasticsearch"]
 
-
-
 root@leolex-VirtualBox:/home/leolex# docker run --name docker-es-1 --net host -d leolex/elasticsearch:1.0
 ad37aee57282de8bf35347c3af28fd91376e0c872ba1cbd8fa351257bd05a51d
 root@leolex-VirtualBox:/home/leolex# docker ps
@@ -91,7 +91,9 @@ root@leolex-VirtualBox:/home/leolex#  curl -X GET 'http://0.0.0.0:9200'
 
 
 ```
-[elastcisearch.yml](адрес "Описание")
+[elastcisearch.yml](https://github.com/le0lex/devops-netology/blob/main/elasticsearch.yml)  
+[dockerhub](https://hub.docker.com/r/leolex/elasticsearch)  
+   
    
 ## Задача 2  
   
@@ -125,6 +127,8 @@ root@leolex-VirtualBox:/home/leolex#  curl -X GET 'http://0.0.0.0:9200'
 ```
   
 ```
+Ответ:
+
 Состояние yellow по кластеру связано с тем, что указано число реплик, а по факту нет других серверов, соответсвено реплицировать некуда. То есть резервирование отсутствует и при выходе из строя одного элемента, систему будет неработоспособной.
 
 Создание индексов:
@@ -279,6 +283,8 @@ green  open   .geoip_databases C_hCoQ4YTE-q1yfw0sDLIQ   1   0         41        
 ```
   
 ```
+Ответ:
+
 root@leolex-VirtualBox:/home/leolex# curl -XPOST 0.0.0.0:9200/_snapshot/netology_backup?pretty -H 'Content-Type: application/json' -d'{"type": "fs", "settings": { "location":"/usr/share/elasticsearch/snapshots" }}'
 {
   "acknowledged" : true

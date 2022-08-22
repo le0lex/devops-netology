@@ -33,35 +33,6 @@ resource "yandex_vpc_subnet" "subnet" {
 }
 
 locals {
-  instance = {
-  stage = 1
-  prod = 2
-  }
-}
-
-resource "yandex_compute_instance" "vm-count" {
-  name = "vm-1"
-
-  resources {
-    cores  = "1"
-    memory = "2"
-  }
-
-  boot_disk {
-    initialize_params {
-      image_id = "${yandex_compute_image.ubu-img.id}"
-    }
-  }
-
-  network_interface {
-    subnet_id = yandex_vpc_subnet.subnet.id
-    nat       = true
-  }
-
-
-}
-
-locals {
   id = toset([
     "1",
     "2",
@@ -69,11 +40,11 @@ locals {
 }
 
 resource "yandex_compute_instance" "vm-for" {
-  
-  name = "vm-2"
+  for_each = local.id
+  name = "vm-${each.key}"
 
   resources {
-    cores  = "1"
+    cores  = "2"
     memory = "2"
   }
 

@@ -104,8 +104,8 @@ Terraform will perform the following actions:
       + status          = (known after apply)
     }
 
-  # yandex_compute_instance.vm-count will be created
-  + resource "yandex_compute_instance" "vm-count" {
+  # yandex_compute_instance.vm-for["1"] will be created
+  + resource "yandex_compute_instance" "vm-for" {
       + created_at                = (known after apply)
       + folder_id                 = (known after apply)
       + fqdn                      = (known after apply)
@@ -156,7 +156,7 @@ Terraform will perform the following actions:
 
       + resources {
           + core_fraction = 100
-          + cores         = 1
+          + cores         = 2
           + memory        = 2
         }
 
@@ -165,7 +165,7 @@ Terraform will perform the following actions:
         }
     }
 
-  # yandex_compute_instance.vm-for will be created
+  # yandex_compute_instance.vm-for["2"] will be created
   + resource "yandex_compute_instance" "vm-for" {
       + created_at                = (known after apply)
       + folder_id                 = (known after apply)
@@ -217,7 +217,7 @@ Terraform will perform the following actions:
 
       + resources {
           + core_fraction = 100
-          + cores         = 1
+          + cores         = 2
           + memory        = 2
         }
 
@@ -258,6 +258,7 @@ Plan: 5 to add, 0 to change, 0 to destroy.
 
 Note: You didn't use the -out option to save this plan, so Terraform can't guarantee to take exactly these actions if you run
 "terraform apply" now.
+
 ```
  
 ---

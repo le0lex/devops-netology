@@ -41,8 +41,8 @@ locals {
 }
 
 
-resource "yandex_compute_instance" "vm_count" {
-  name = "vm-${count.index}-${terraform.workspace}"
+resource "yandex_compute_instance" "vmcount" {
+  name = "vmcount-${count.index}-${terraform.workspace}"
 
   resources {
     cores  = "2"
@@ -66,14 +66,14 @@ resource "yandex_compute_instance" "vm_count" {
 
 locals {
   id = toset([
-    "1",
     "2",
+    "3",
   ])
 }
 
-resource "yandex_compute_instance" "vm_for" {
+resource "yandex_compute_instance" "vmfor" {
   for_each = local.id
-  name     = "vm_for-${each.key}-${terraform.workspace}}"
+  name     = "vmfor-${each.key}-${terraform.workspace}"
 
   resources {
     cores  = "2"
@@ -91,4 +91,5 @@ resource "yandex_compute_instance" "vm_for" {
     nat       = true
   }
 }
+
 

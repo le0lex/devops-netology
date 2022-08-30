@@ -59,7 +59,9 @@ root@leolex-VirtualBox:/home/leolex/terraform_HW7.2# terraform workspace list
   
 ![terraform workspace list](https://github.com/le0lex/devops-netology/blob/main/screen/HW7.3_create-workspaces.png)  
   
-[Terraform plan](https://github.com/le0lex/devops-netology/blob/main/terraform_HW7.3/7.3_terraform_plan)  
+[Terraform plan prod](https://github.com/le0lex/devops-netology/blob/main/terraform_HW7.3/7.3_terraform_plan_prod)  
+[Terraform plan stage](https://github.com/le0lex/devops-netology/blob/main/terraform_HW7.3/7.3_terraform_plan_stage)  
+
  
   
  ---

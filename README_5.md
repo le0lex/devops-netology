@@ -1,3 +1,116 @@
+# Домашнее задание к занятию "7.5. Основы golang"
+
+С `golang` в рамках курса, мы будем работать не много, поэтому можно использовать любой IDE. 
+Но рекомендуем ознакомиться с [GoLand](https://www.jetbrains.com/ru-ru/go/).  
+
+## Задача 1. Установите golang.  
+1. Воспользуйтесь инструкций с официального сайта: [https://golang.org/](https://golang.org/).  
+2. Так же для тестирования кода можно использовать песочницу: [https://play.golang.org/](https://play.golang.org/).  
+  
+Ответ  
+![Golang Version](https://github.com/le0lex/devops-netology/blob/main/screen/HW_7.5_task1.png) 
+
+## Задача 2. Знакомство с gotour.  
+У Golang есть обучающая интерактивная консоль [https://tour.golang.org/](https://tour.golang.org/).   
+Рекомендуется изучить максимальное количество примеров. В консоли уже написан необходимый код, 
+осталось только с ним ознакомиться и поэкспериментировать как написано в инструкции в левой части экрана.   
+  
+Ответ - done 
+ 
+  
+## Задача 3. Написание кода. 
+Цель этого задания закрепить знания о базовом синтаксисе языка. Можно использовать редактор кода 
+на своем компьютере, либо использовать песочницу: [https://play.golang.org/](https://play.golang.org/).
+
+1. Напишите программу для перевода метров в футы (1 фут = 0.3048 метр). Можно запросить исходные данные 
+у пользователя, а можно статически задать в коде.
+    Для взаимодействия с пользователем можно использовать функцию `Scanf`:
+    ```
+    package main
+    
+    import "fmt"
+    
+    func main() {
+        fmt.Print("Enter a number: ")
+        var input float64
+        fmt.Scanf("%f", &input)
+    
+        output := input * 2
+    
+        fmt.Println(output)    
+    }
+    ```
+ 
+1. Напишите программу, которая найдет наименьший элемент в любом заданном списке, например:
+    ```
+    x := []int{48,96,86,68,57,82,63,70,37,34,83,27,19,97,9,17,}
+    ```
+1. Напишите программу, которая выводит числа от 1 до 100, которые делятся на 3. То есть `(3, 6, 9, …)`.
+
+В виде решения ссылку на код или сам код. 
+
+Ответ  
+
+Task_1:  
+```
+package main
+  import "fmt"
+  func main() {
+    var foot float64
+      fmt.Print("Type foot: ")
+      fmt.Scanf("%f", &foot)           
+      result := foot * 0.3048 
+      fmt.Println("Meters:", result )
+        }
+
+```
+![Task_1_output](https://github.com/le0lex/devops-netology/blob/main/screen/HW7.5_t3.1.png) 
+  
+```
+package main
+  import "fmt"
+  func main() {
+    x := []int{46,5,76,86,3,68,82,63,37,34,27,19,97,9,17,1,20,24,28}
+    nul := 0
+    for i, min := range x {
+      if (i == 0) {
+        nul = min
+      } else {
+        if (min < nul) {
+          nul = min
+        }
+      }
+      }
+    fmt.Println("Hаименьший элемент: ", nul)
+  }
+
+```
+![Task_2_output](https://github.com/le0lex/devops-netology/blob/main/screen/HW7.5_t3.2.png)  
+  
+```
+package main
+  import "fmt"
+  func main() {
+  fmt.Println("числа от 1 до 100, которые делятся на 3:")
+	  for i := 1 ; i <= 100 ; i++ {
+      if (i%3) == 0 {fmt.Print(i," | ")}
+
+}
+fmt.Println("   ")
+}
+
+```
+![Task_2_output](https://github.com/le0lex/devops-netology/blob/main/screen/HW7.5_t3.3.png)  
+  
+
+## Задача 4. Протестировать код (не обязательно).
+
+Создайте тесты для функций из предыдущего задания. 
+
+---
+  
+  
+
 # Домашнее задание к занятию "7.3. Основы и принцип работы Терраформ"
 
 ## Задача 1. Создадим бэкэнд в S3 (необязательно, но крайне желательно).

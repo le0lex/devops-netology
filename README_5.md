@@ -66,6 +66,8 @@ package main
 ```
 ![Task_1_output](https://github.com/le0lex/devops-netology/blob/main/screen/HW7.5_t3.1.png) 
   
+  
+Task_2:
 ```
 package main
   import "fmt"
@@ -87,6 +89,7 @@ package main
 ```
 ![Task_2_output](https://github.com/le0lex/devops-netology/blob/main/screen/HW7.5_t3.2.png)  
   
+Task_3:  
 ```
 package main
   import "fmt"

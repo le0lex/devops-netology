@@ -68,7 +68,7 @@ func resourceQueueCreate(d *schema.ResourceData, meta interface{}) error {
 	}
 ```
   
-[queue.go](https://github.com/hashicorp/terraform-provider-aws/blob/8a04c06a6cc5eeb7ad478f2451d8e07a31550100/internal/service/sqs/queue.go#L187(  
+[queue.go](https://github.com/hashicorp/terraform-provider-aws/blob/8a04c06a6cc5eeb7ad478f2451d8e07a31550100/internal/service/sqs/queue.go#L187)  
 
 ## Задача 2. (Не обязательно) 
 В рамках вебинара и презентации мы разобрали как создать свой собственный провайдер на примере кофемашины. 

@@ -1,3 +1,88 @@
+# Домашнее задание к занятию "7.6. Написание собственных провайдеров для Terraform."
+
+Бывает, что 
+* общедоступная документация по терраформ ресурсам не всегда достоверна,
+* в документации не хватает каких-нибудь правил валидации или неточно описаны параметры,
+* понадобиться использовать провайдер без официальной документации,
+* может возникнуть необходимость написать свой провайдер для системы используемой в ваших проектах.   
+
+## Задача 1. 
+Давайте потренируемся читать исходный код AWS провайдера, который можно склонировать от сюда: 
+[https://github.com/hashicorp/terraform-provider-aws.git](https://github.com/hashicorp/terraform-provider-aws.git).
+Просто найдите нужные ресурсы в исходном коде и ответы на вопросы станут понятны.  
+
+
+1. Найдите, где перечислены все доступные `resource` и `data_source`, приложите ссылку на эти строки в коде на 
+гитхабе.   
+1. Для создания очереди сообщений SQS используется ресурс `aws_sqs_queue` у которого есть параметр `name`. 
+    * С каким другим параметром конфликтует `name`? Приложите строчку кода, в которой это указано.
+    * Какая максимальная длина имени? 
+    * Какому регулярному выражению должно подчиняться имя? 
+  
+Ответ:  
+  
+Склонировал репозиторий  
+git clone https://github.com/hashicorp/terraform-provider-aws.git  
+  
+[provider.go](https://github.com/hashicorp/terraform-provider-aws/blob/22ba951e72f9fe8483d53613614ad2568adad575/internal/provider/provider.go#L415)  
+доступные `resource` - cтрока 415:
+`DataSourcesMap: map[string]*schema.Resource{`
+  
+[provider.go](https://github.com/hashicorp/terraform-provider-aws/blob/8e4d8a3f3f781b83f96217c2275f541c893fec5a/aws/provider.go#L16)
+доступные `data_source` - cтрока 169:  
+`DataSourcesMap: map[string]*schema.Resource{`
+  
+name конфликтует с 
+`ConflictsWith: []string{"name_prefix"}`
+  
+объявлено в строке 25 queue.go:
+`queueSchema = map[string]*schema.Schema{`
+  
+[queue.go](https://github.com/hashicorp/terraform-provider-aws/blob/8a04c06a6cc5eeb7ad478f2451d8e07a31550100/internal/service/sqs/queue.go#L87)
+
+Не нашел ограничений по длине или регулярных выражений для имени.
+Думаю, формат имени описывается функцией func resourceQueueCreate
+
+```
+func resourceQueueCreate(d *schema.ResourceData, meta interface{}) error {
+	conn := meta.(*conns.AWSClient).SQSConn
+	defaultTagsConfig := meta.(*conns.AWSClient).DefaultTagsConfig
+	tags := defaultTagsConfig.MergeTags(tftags.New(d.Get("tags").(map[string]interface{})))
+
+	var name string
+	fifoQueue := d.Get("fifo_queue").(bool)
+	if fifoQueue {
+		name = create.NameWithSuffix(d.Get("name").(string), d.Get("name_prefix").(string), FIFOQueueNameSuffix)
+	} else {
+		name = create.Name(d.Get("name").(string), d.Get("name_prefix").(string))
+	}
+
+	input := &sqs.CreateQueueInput{
+		QueueName: aws.String(name),
+	}
+
+	attributes, err := queueAttributeMap.ResourceDataToAPIAttributesCreate(d)
+
+	if err != nil {
+		return err
+	}
+```
+  
+[queue.go](https://github.com/hashicorp/terraform-provider-aws/blob/8a04c06a6cc5eeb7ad478f2451d8e07a31550100/internal/service/sqs/queue.go#L187(  
+
+## Задача 2. (Не обязательно) 
+В рамках вебинара и презентации мы разобрали как создать свой собственный провайдер на примере кофемашины. 
+Также вот официальная документация о создании провайдера: 
+[https://learn.hashicorp.com/collections/terraform/providers](https://learn.hashicorp.com/collections/terraform/providers).
+
+1. Проделайте все шаги создания провайдера.
+2. В виде результата приложение ссылку на исходный код.
+3. Попробуйте скомпилировать провайдер, если получится то приложите снимок экрана с командой и результатом компиляции.   
+
+---
+  
+  
+
 # Домашнее задание к занятию "7.5. Основы golang"
 
 С `golang` в рамках курса, мы будем работать не много, поэтому можно использовать любой IDE. 

@@ -1,3 +1,177 @@
+
+# Домашнее задание к занятию "08.02 Работа с Playbook"
+
+## Подготовка к выполнению
+
+1. (Необязательно) Изучите, что такое [clickhouse](https://www.youtube.com/watch?v=fjTNS2zkeBs) и [vector](https://www.youtube.com/watch?v=CgEhyffisLY)
+2. Создайте свой собственный (или используйте старый) публичный репозиторий на github с произвольным именем.
+3. Скачайте [playbook](./playbook/) из репозитория с домашним заданием и перенесите его в свой репозиторий.
+4. Подготовьте хосты в соответствии с группами из предподготовленного playbook.
+
+## Основная часть
+
+1. Приготовьте свой собственный inventory файл `prod.yml`.
+```
+---
+clickhouse:
+  hosts:
+    clickhouse-01:
+      ansible_connection: docker
+      
+vector:
+  hosts:
+    vector-01:
+      ansible_connection: docker
+```
+  
+2. Допишите playbook: нужно сделать ещё один play, который устанавливает и настраивает [vector](https://vector.dev).
+
+3. При создании tasks рекомендую использовать модули: `get_url`, `template`, `unarchive`, `file`.
+Сделано
+4. Tasks должны: скачать нужной версии дистрибутив, выполнить распаковку в выбранную директорию, установить vector.
+```
+- name: Install vector
+  hosts: vector-01
+  tasks:
+      - name: Upload tar.gz vector from remote URL
+        get_url:
+            url: "https://packages.timber.io/vector/{{ vector_version }}/vector-{{ vector_version }}-x86_64-unknown-linux-musl.tar.gz"
+            dest: "/tmp/vector-{{ vector_version }}-x86_64-unknown-linux-gnu.tar.gz"
+            mode: 0755
+            timeout: 60
+            force: true
+            validate_certs: false
+        register: get_vector
+        until: get_vector is succeeded
+        tags: vector
+      - name: Create directrory for vector
+        file:
+          state: directory
+          path: "{{ vector_home }}"
+        tags: vector
+      - name: Extract vector in the installation directory
+        unarchive:
+          copy: false
+          src: "/tmp/vector-{{ vector_version }}-x86_64-unknown-linux-musl.tar.gz"
+          dest: "{{ vector_home }}"
+          extra_opts: [--strip-components=1]
+          creates: "{{ vector_home }}/bin/vector"
+        tags:
+          - skip_ansible_lint
+          - vector
+```
+5. Запустите `ansible-lint site.yml` и исправьте ошибки, если они есть.
+Ошибки:
+![Task_5_output](https://github.com/le0lex/devops-netology/blob/main/screen/HW8.2_t5_1.png) 
+```
+В строке 31 вместо ansible.builtin.command: "clickhouse-client -q 'create database logs;'"
+вставил
+      ansible.builtin.command:
+       cmd: "clickhouse-client -q 'create database logs;'"
+```
+6. Попробуйте запустить playbook на этом окружении с флагом `--check`.
+```
+leolex@leolex-VirtualBox:~/SW/pycharm-community-2021.3.3/my_git01/ansible/playbook$ sudo ansible-playbook -i inventory/prod.yml site.yml --check
+[WARNING]: Found both group and host with same name: clickhouse
+[WARNING]: Found both group and host with same name: vector
+
+PLAY [Install Clickhouse] ****************************************************************************************************
+
+TASK [Gathering Facts] *******************************************************************************************************
+[WARNING]: Platform linux on host clickhouse is using the discovered Python interpreter at /usr/bin/python, but future
+installation of another Python interpreter could change this. See
+https://docs.ansible.com/ansible/2.9/reference_appendices/interpreter_discovery.html for more information.
+ok: [clickhouse]
+
+TASK [Get clickhouse distrib] ************************************************************************************************
+ok: [clickhouse] => (item=clickhouse-client)
+ok: [clickhouse] => (item=clickhouse-server)
+failed: [clickhouse] (item=clickhouse-common-static) => {"ansible_loop_var": "item", "changed": false, "dest": "./clickhouse-common-static-22.3.3.44.rpm", "elapsed": 0, "gid": 0, "group": "root", "item": "clickhouse-common-static", "mode": "0777", "msg": "Request failed", "owner": "root", "response": "HTTP Error 404: Not Found", "size": 246310036, "state": "file", "status_code": 404, "uid": 0, "url": "https://packages.clickhouse.com/rpm/stable/clickhouse-common-static-22.3.3.44.noarch.rpm"}
+
+TASK [Get clickhouse distrib] ************************************************************************************************
+ok: [clickhouse]
+
+TASK [Install clickhouse packages] *******************************************************************************************
+fatal: [clickhouse]: FAILED! => {"changed": false, "msg": ["Could not detect which major revision of yum is in use, which is required to determine module backend.", "You can manually specify use_backend to tell the module whether to use the yum (yum3) or dnf (yum4) backend})"]}
+
+PLAY RECAP *******************************************************************************************************************
+clickhouse                 : ok=2    changed=0    unreachable=0    failed=1    skipped=0    rescued=1    ignored=0   
+
+
+```
+Пробовал менять ansible.builtin.yum на ansible.builtin.apt, и добавлять "mode: 0777" но все равно выходит ошибка  
+
+```
+leolex@leolex-VirtualBox:~/SW/pycharm-community-2021.3.3/my_git01/ansible/playbook$ sudo ansible-playbook -i inventory/prod.yml site.yml --diff
+[WARNING]: Found both group and host with same name: vector
+[WARNING]: Found both group and host with same name: clickhouse
+
+PLAY [Install Clickhouse] ****************************************************************************************************
+
+TASK [Gathering Facts] *******************************************************************************************************
+[WARNING]: Platform linux on host clickhouse is using the discovered Python interpreter at /usr/bin/python, but future
+installation of another Python interpreter could change this. See
+https://docs.ansible.com/ansible/2.9/reference_appendices/interpreter_discovery.html for more information.
+ok: [clickhouse]
+
+TASK [Get clickhouse distrib] ************************************************************************************************
+changed: [clickhouse] => (item=clickhouse-client)
+changed: [clickhouse] => (item=clickhouse-server)
+failed: [clickhouse] (item=clickhouse-common-static) => {"ansible_loop_var": "item", "changed": false, "dest": "./clickhouse-common-static-22.3.3.44.rpm", "elapsed": 0, "item": "clickhouse-common-static", "msg": "Request failed", "response": "HTTP Error 404: Not Found", "status_code": 404, "url": "https://packages.clickhouse.com/rpm/stable/clickhouse-common-static-22.3.3.44.noarch.rpm"}
+
+TASK [Get clickhouse distrib] ************************************************************************************************
+changed: [clickhouse]
+
+TASK [Install clickhouse packages] *******************************************************************************************
+fatal: [clickhouse]: FAILED! => {"ansible_facts": {"pkg_mgr": "apt"}, "changed": false, "msg": "No package matching './clickhouse-common-static-22.3.3.44.rpm' is available"}
+
+PLAY RECAP *******************************************************************************************************************
+clickhouse                 : ok=2    changed=1    unreachable=0    failed=1    skipped=0    rescued=1    ignored=0  
+```
+
+Сами .rpm скачиваются:
+
+```
+leolex@leolex-VirtualBox:~/SW/pycharm-community-2021.3.3/my_git01/ansible/playbook$ sudo docker exec -ti clickhouse bash
+root@21e003fa3105:/# ls -la
+total 240732
+drwxr-xr-x   1 root root      4096 Oct 12 10:19 .
+drwxr-xr-x   1 root root      4096 Oct 12 10:19 ..
+-rwxr-xr-x   1 root root         0 Oct 10 16:07 .dockerenv
+drwxr-xr-x   1 root root      4096 Oct 12 08:50 bin
+drwxr-xr-x   2 root root      4096 Sep  3 12:00 boot
+-rwxrwxrwx   1 root root     38090 Oct 12 10:12 clickhouse-client-22.3.3.44.rpm
+-rwxrwxrwx   1 root root 246310036 Oct 12 10:19 clickhouse-common-static-22.3.3.44.rpm
+-rwxrwxrwx   1 root root     61151 Oct 12 10:12 clickhouse-server-22.3.3.44.rpm
+drwxr-xr-x   5 root root       360 Oct 12 09:12 dev
+drwxr-xr-x   1 root root      4096 Oct 12 09:24 etc
+drwxr-xr-x   2 root root      4096 Sep  3 12:00 home
+drwxr-xr-x   1 root root      4096 Oct 12 09:24 lib
+drwxr-xr-x   2 root root      4096 Oct  4 00:00 lib64
+drwxr-xr-x   2 root root      4096 Oct  4 00:00 media
+drwxr-xr-x   2 root root      4096 Oct  4 00:00 mnt
+drwxr-xr-x   2 root root      4096 Oct  4 00:00 opt
+dr-xr-xr-x 326 root root         0 Oct 12 09:12 proc
+drwx------   1 root root      4096 Oct 12 08:54 root
+drwxr-xr-x   1 root root      4096 Oct 12 09:55 run
+drwxr-xr-x   2 root root      4096 Oct  4 00:00 sbin
+drwxr-xr-x   2 root root      4096 Oct  4 00:00 srv
+dr-xr-xr-x  13 root root         0 Oct 12 09:12 sys
+drwxrwxrwt   1 root root      4096 Oct 12 10:25 tmp
+drwxr-xr-x   1 root root      4096 Oct  4 00:00 usr
+drwxr-xr-x   1 root root      4096 Oct  4 00:00 var
+
+```
+
+
+7. Запустите playbook на `prod.yml` окружении с флагом `--diff`. Убедитесь, что изменения на системе произведены.
+8. Повторно запустите playbook с флагом `--diff` и убедитесь, что playbook идемпотентен.
+9. Подготовьте README.md файл по своему playbook. В нём должно быть описано: что делает playbook, какие у него есть параметры и теги.
+10. Готовый playbook выложите в свой репозиторий, поставьте тег `08-ansible-02-playbook` на фиксирующий коммит, в ответ предоставьте ссылку на него.
+
+---
+
+
 # Домашнее задание к занятию "08.01 Введение в Ansible"
 
 ## Подготовка к выполнению

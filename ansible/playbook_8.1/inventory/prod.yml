@@ -1,0 +1,13 @@
+---
+  el:
+    hosts: 
+      ansbl-centos: 
+        ansible_connection: docker
+  deb:
+    hosts:
+      ansbl-ubuntu: 
+        ansible_connection: docker
+  local:
+    hosts:
+      localhost: 
+        ansible_connection: local

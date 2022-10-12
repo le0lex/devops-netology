@@ -35,8 +35,8 @@
 
 Если всё отработало в рамках ожидания - выгрузить схемы workflow для импорта в XML. Файлы с workflow приложить к решению задания.
 
-![All_task_workflow](https://github.com/le0lex/devops-netology/blob/main/All_task_workflow.xml) 
-![BUG_workflow](https://github.com/le0lex/devops-netology/blob/main/screen/BUG_workflow.xml) 
+[All_task_workflow](https://github.com/le0lex/devops-netology/blob/main/All_task_workflow.xml)    
+[BUG_workflow](https://github.com/le0lex/devops-netology/blob/main/BUG_workflow.xml) 
 
 
 ---

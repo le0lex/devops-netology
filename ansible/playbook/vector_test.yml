@@ -1,6 +1,5 @@
----
 - name: Install vector
-  hosts: vector-01
+  hosts: vector
   tasks:
       - name: Upload tar.gz vector from remote URL
         get_url:

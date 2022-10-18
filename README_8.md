@@ -25,7 +25,7 @@ vector:
   
 2. Допишите playbook: нужно сделать ещё один play, который устанавливает и настраивает [vector](https://vector.dev).
 
-3. При создании tasks рекомендую использовать модули: `get_url`, `template`, `unarchive`, `file`.
+3. При создании tasks рекомендую использовать модули: `get_url`, `template`, `unarchive`, `file`.  
 Сделано
 4. Tasks должны: скачать нужной версии дистрибутив, выполнить распаковку в выбранную директорию, установить vector.
 ```
@@ -41,7 +41,7 @@ vector:
       ansible.builtin.yum:
         name: "vector-0.21.0-1.x86_64.rpm"
 ```
-5. Запустите `ansible-lint site.yml` и исправьте ошибки, если они есть.
+5. Запустите `ansible-lint site.yml` и исправьте ошибки, если они есть.  
 Ошибки:
 ![Task_5_output](https://github.com/le0lex/devops-netology/blob/main/screen/HW8.2_t5_1.png) 
 ```
@@ -50,7 +50,7 @@ vector:
       ansible.builtin.command:
        cmd: "clickhouse-client -q 'create database logs;'"
 ```
-6. Попробуйте запустить playbook на этом окружении с флагом `--check`.
+6. Попробуйте запустить playbook на этом окружении с флагом `--check`.  
 Ожидаемо, скрипт выдал ошибку о том, что не нашел пакеты.  
 
 ![Task_6_output](https://github.com/le0lex/devops-netology/blob/main/screen/HW8.2_t6_1.png) 
@@ -72,10 +72,10 @@ name: Start clickhouse-server
         state: started
 ```
 ![Task_7_output](https://github.com/le0lex/devops-netology/blob/main/screen/HW8.2_t7_1.png) 
-8. Повторно запустите playbook с флагом `--diff` и убедитесь, что playbook идемпотентен.
+8. Повторно запустите playbook с флагом `--diff` и убедитесь, что playbook идемпотентен.  
 ![Task_8_output](https://github.com/le0lex/devops-netology/blob/main/screen/HW8.2_t8_1.png)
-9. Подготовьте README.md файл по своему playbook. В нём должно быть описано: что делает playbook, какие у него есть параметры и теги.
-10. Готовый playbook выложите в свой репозиторий, поставьте тег `08-ansible-02-playbook` на фиксирующий коммит, в ответ предоставьте ссылку на него.
+9. Подготовьте README.md файл по своему playbook. В нём должно быть описано: что делает playbook, какие у него есть параметры и теги.  
+10. Готовый playbook выложите в свой репозиторий, поставьте тег `08-ansible-02-playbook` на фиксирующий коммит, в ответ предоставьте ссылку на него.  
 [фиксирующий коммит](https://github.com/le0lex/devops-netology/commit/2fecabdb113394828bc566bc3ccdf4b8e94e7cb9)
 
 ---

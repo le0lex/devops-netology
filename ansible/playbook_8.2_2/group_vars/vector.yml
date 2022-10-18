@@ -1,0 +1,21 @@
+---
+ vector_config:
+  sources:
+   sample_file:
+    type: file
+    read_from: beginning
+    ignore_older_secs: 600
+     - /home/leolex/logs/*.log
+  sinks: 
+   to_clickhouse:
+    type: clickhouse
+    inputs:
+     -sample_file
+    endpoints:
+    databases:
+    table:
+    auth:
+     password:
+     user:
+    skip_unknown_fields: true
+    compression: gzip

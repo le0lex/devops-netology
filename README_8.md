@@ -94,6 +94,7 @@ name: Start clickhouse-server
 ![Task_8_output](https://github.com/le0lex/devops-netology/blob/main/screen/HW8.2_t8_1.png)
 9. Подготовьте README.md файл по своему playbook. В нём должно быть описано: что делает playbook, какие у него есть параметры и теги.
 10. Готовый playbook выложите в свой репозиторий, поставьте тег `08-ansible-02-playbook` на фиксирующий коммит, в ответ предоставьте ссылку на него.
+[фиксирующий коммит](https://github.com/le0lex/devops-netology/commit/2fecabdb113394828bc566bc3ccdf4b8e94e7cb9)
 
 ---
 

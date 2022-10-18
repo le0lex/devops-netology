@@ -29,35 +29,17 @@ vector:
 Сделано
 4. Tasks должны: скачать нужной версии дистрибутив, выполнить распаковку в выбранную директорию, установить vector.
 ```
-- name: Install vector
-  hosts: vector-01
+- name: Install Vector
+  hosts: vector
   tasks:
-      - name: Upload tar.gz vector from remote URL
-        get_url:
-            url: "https://packages.timber.io/vector/{{ vector_version }}/vector-{{ vector_version }}-x86_64-unknown-linux-musl.tar.gz"
-            dest: "/tmp/vector-{{ vector_version }}-x86_64-unknown-linux-gnu.tar.gz"
-            mode: 0755
-            timeout: 60
-            force: true
-            validate_certs: false
-        register: get_vector
-        until: get_vector is succeeded
-        tags: vector
-      - name: Create directrory for vector
-        file:
-          state: directory
-          path: "{{ vector_home }}"
-        tags: vector
-      - name: Extract vector to the installation directory
-        unarchive:
-          copy: false
-          src: "/tmp/vector-{{ vector_version }}-x86_64-unknown-linux-musl.tar.gz"
-          dest: "{{ vector_home }}"
-          extra_opts: [--strip-components=1]
-          creates: "{{ vector_home }}/bin/vector"
-        tags:
-          - skip_ansible_lint
-          - vector
+    - name: Download Vector
+      ansible.builtin.get_url:
+        url: "https://packages.timber.io/vector/0.21.0/vector-0.21.0-1.x86_64.rpm"
+        dest: "./vector-0.21.0-1.x86_64.rpm"
+    - name: Install Vector
+      become: true
+      ansible.builtin.yum:
+        name: "vector-0.21.0-1.x86_64.rpm"
 ```
 5. Запустите `ansible-lint site.yml` и исправьте ошибки, если они есть.
 Ошибки:

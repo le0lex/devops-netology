@@ -1,17 +1,14 @@
-# 8.2 описание Playbook по заданию
+Данный play:
 
-## GROUP VARS
-clickhouse - имя пакета установки clickhouse  
-vector - имя пакета установки vector  
-clickhouse_version - версия clickhouse  
-vector_version - версия vector  
-clickhouse-client - переменная для скачивания и установки компонента clickhouse  
-clickhouse-server - переменная для скачивания и установки компонента clickhouse  
-clickhouse-common-static - переменная для скачивания и установки компонента clickhouse  
-
-## Описание Play   
-  
-### Install clickhouse  
-  
-### Install vector  
-
+- устанавливает репозиторий EPEL;
+- устанавливает ngin;
+- устанавливает git;
+- стартует nginx и добавляет его в автозагрузку;
+- устанавливает firewall;
+- запускает fireWall;
+- конфигурирует FireWall;
+- создаем директорию, где будет находиться lighthouse;
+- создает директорию, для lighthouse;
+- проверяет, наличие установленного lighthouse, если он установлен, то следующий шаг пропускается;
+- клонирует репозиторий в созданную папку и меняет путь в nginx.conf где у нас находится lighthouse;
+- перезапускает nginx;

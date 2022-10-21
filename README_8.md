@@ -1,3 +1,149 @@
+# Домашнее задание к занятию "08.03 Использование Yandex Cloud"
+
+## Подготовка к выполнению
+
+1. (Необязательно) Познакомтесь с [lighthouse](https://youtu.be/ymlrNlaHzIY?t=929)
+2. Подготовьте в Yandex Cloud три хоста: для `clickhouse`, для `vector` и для `lighthouse`.
+
+Ссылка на репозиторий LightHouse: https://github.com/VKCOM/lighthouse
+
+## Основная часть
+
+1. Допишите playbook: нужно сделать ещё один play, который устанавливает и настраивает lighthouse.
+2. При создании tasks рекомендую использовать модули: `get_url`, `template`, `yum`, `apt`.
+3. Tasks должны: скачать статику lighthouse, установить nginx или любой другой webserver, настроить его конфиг для открытия lighthouse, запустить webserver.
+4. Приготовьте свой собственный inventory файл `prod.yml`.
+5. Запустите `ansible-lint site.yml` и исправьте ошибки, если они есть.
+6. Попробуйте запустить playbook на этом окружении с флагом `--check`.
+7. Запустите playbook на `prod.yml` окружении с флагом `--diff`. Убедитесь, что изменения на системе произведены.
+8. Повторно запустите playbook с флагом `--diff` и убедитесь, что playbook идемпотентен.
+9. Подготовьте README.md файл по своему playbook. В нём должно быть описано: что делает playbook, какие у него есть параметры и теги.
+10. Готовый playbook выложите в свой репозиторий, поставьте тег `08-ansible-03-yandex` на фиксирующий коммит, в ответ предоставьте ссылку на него.
+
+Ответ:  
+Подготовлены три VM   
+![HW8.3_t0.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW8.3_t0.png)
+
+Добавил в playbook новый play:  
+```
+- name: Install Lighthouse
+  hosts: vm-lighthouse
+  tasks:
+    - name: Install EPEL
+      become: true
+      ansible.builtin.yum:
+        name: "epel-release"
+        state: latest
+    - name: Install Nginx & Git
+      become: true
+      ansible.builtin.yum:
+        name:
+          - nginx
+          - git
+        state: latest
+    - name: Start Nginx
+      become: true
+      ansible.builtin.systemd:
+        name: nginx
+        state: started
+    - name: Autorun Nginx
+      become: true
+      ansible.builtin.systemd:
+        name: nginx
+        enabled: yes
+    - name: Install FireWall
+      become: true
+      ansible.builtin.yum:
+        name: "firewalld"
+        state: latest
+    - name: Start FireWall
+      become: true
+      ansible.builtin.systemd:
+        name: firewalld
+        state: started
+    - name: Upgrade FireWall
+      become: true
+      ansible.builtin.command:
+        cmd: "{{ item }}"
+      with_items:
+        - firewall-cmd --zone=public --permanent --add-service=http
+        - firewall-cmd --zone=public --permanent --add-service=https
+        - firewall-cmd --reload
+    - name: Create directory
+      become: true
+      ansible.builtin.file:
+        path: /var/www/lighthouse
+        state: directory
+        owner: nginx
+        group: nginx
+        mode: "0755"
+    - name: Check folder
+      ansible.builtin.stat:
+        path: /usr/share/nginx/lighthouse
+      register: stat_result
+    - name: Clone repository Lighthouse
+      become: true
+      ansible.builtin.command:
+        cmd: "{{ item }}"
+      with_items:
+        - git clone https://github.com/VKCOM/lighthouse.git /usr/share/nginx/lighthouse
+        - sed -i 's|/usr/share/nginx/html|/usr/share/nginx/lighthouse|' /etc/nginx/nginx.conf
+      when: stat_result.stat.islnk is not defined
+    - name: Restart Nginx
+      become: true
+      ansible.builtin.systemd:
+        name: nginx
+        state: restarted
+```
+
+[README.md](https://github.com/le0lex/devops-netology/blob/main/README.md)
+
+Проверена конфигурация:  
+![HW8.3_t0_lint.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW8.3_t0_lint.png)
+
+Запуск playbook с параметром --check:  
+![HW8.3_t1_check.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW8.3_t1_check.png)
+![HW8.3_t1_check2.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW8.3_t1_check2.png)
+
+Запускаем playbook на prod с параметром --diff:  
+prod.yml
+```
+---
+clickhouse:
+  hosts:
+    vm-clickhouse:
+       ansible_host: 158.160.10.42
+      
+vector:
+  hosts:
+    vm-vector:
+       ansible_host: 84.252.140.23
+       
+lighthouse:
+  hosts:
+    vm-lighthouse:
+       ansible_host: 84.201.166.62
+```
+
+![HW8.3_t1_1.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW8.3_t1_1.png)
+![HW8.3_t1_2.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW8.3_t1_2.png)
+
+Не перезапустился nginx, поэтому добавил "become: true" в блок "Restart Nginx"  
+
+Повторный запуск playbook с параметром --diff:  
+![HW8.3_t2_1.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW8.3_t2_1.png)
+![HW8.3_t2_2.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW8.3_t2_2.png)
+
+Теперь ошибки нет.
+
+Проверяем доступ к WEB интерфейсу lighthouse:  
+![HW8.3_t3.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW8.3_t3.png)
+
+[08-ansible-03-yandex](https://github.com/le0lex/devops-netology/tree/main/ansible/playbook_8.3)
+
+---
+
+
 # Домашнее задание к занятию "08.02 Работа с Playbook"
 
 ## Подготовка к выполнению

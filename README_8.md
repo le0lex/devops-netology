@@ -96,7 +96,7 @@
         state: restarted
 ```
 
-[README.md](https://github.com/le0lex/devops-netology/blob/main/README.md)
+[README.md](https://github.com/le0lex/devops-netology/blob/40292a9d31866ef8329668bf4e5a095e48b00901/ansible/playbook_8.3/README.md)
 
 Проверена конфигурация:  
 ![HW8.3_t0_lint.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW8.3_t0_lint.png)

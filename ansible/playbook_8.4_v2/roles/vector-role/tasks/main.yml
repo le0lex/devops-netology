@@ -1,0 +1,10 @@
+---
+# tasks file for vector-role
+- name: Download Vector
+  ansible.builtin.get_url:
+    url: "https://packages.timber.io/vector/0.21.0/vector-0.21.0-1.x86_64.rpm"
+    dest: "./vector-0.21.0-1.x86_64.rpm"
+- name: Install Vector
+  become: true
+  ansible.builtin.yum:
+    name: "vector-0.21.0-1.x86_64.rpm"

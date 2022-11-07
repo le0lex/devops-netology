@@ -1,3 +1,134 @@
+# Домашнее задание к занятию "8.4 Работа с Roles"
+
+## Подготовка к выполнению
+1. (Необязательно) Познакомтесь с [lighthouse](https://youtu.be/ymlrNlaHzIY?t=929)
+2. Создайте два пустых публичных репозитория в любом своём проекте: vector-role и lighthouse-role.
+3. Добавьте публичную часть своего ключа к своему профилю в github.
+
+---
+### Ответ:
+---
+
+1. Ознакомился с `lighthouse`.
+2. Создано 2 новых репозитория `vector-role` и `lighthouse-role`:  
+
+![HW_8.4_t1.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_8.4_t1.png)
+
+3. Публичный ключ добавлен:  
+
+![HW_8.4_t1_add-key.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_8.4_t1_add-key.png)  
+
+  
+
+## Основная часть  
+   
+Наша основная цель - разбить наш playbook на отдельные roles. Задача: сделать roles для clickhouse, vector и lighthouse и написать playbook для использования этих ролей. Ожидаемый результат: существуют три ваших репозитория: два с roles и один с playbook.  
+  
+1. Создать в старой версии playbook файл `requirements.yml` и заполнить его следующим содержимым:  
+
+   ```yaml
+   ---
+     - src: git@github.com:AlexeySetevoi/ansible-clickhouse.git
+       scm: git
+       version: "1.11.0"
+       name: clickhouse 
+   ```
+
+2. При помощи `ansible-galaxy` скачать себе эту роль.  
+3. Создать новый каталог с ролью при помощи `ansible-galaxy role init vector-role`.  
+4. На основе tasks из старого playbook заполните новую role. Разнесите переменные между `vars` и `default`.   
+5. Перенести нужные шаблоны конфигов в `templates`.  
+6. Описать в `README.md` обе роли и их параметры.  
+7. Повторите шаги 3-6 для lighthouse. Помните, что одна роль должна настраивать один продукт.  
+8. Выложите все roles в репозитории. Проставьте тэги, используя семантическую нумерацию Добавьте roles в `requirements.yml` в playbook.   
+9. Переработайте playbook на использование roles. Не забудьте про зависимости lighthouse и возможности совмещения `roles` с `tasks`.  
+10. Выложите playbook в репозиторий.  
+11. В ответ приведите ссылки на оба репозитория с roles и одну ссылку на репозиторий с playbook.  
+
+---
+### Ответ:  
+---
+
+1. Создаем файл `requirements.yml` и добавляем необходимое содержимое:  
+
+```
+leolex@leolex-VirtualBox:~/SW/pycharm-community-2021.3.3/my_git01/ansible/playbook_8.4$ cat requirements.yml 
+---
+  - src: git@github.com:AlexeySetevoi/ansible-clickhouse.git
+    scm: git
+    version: "1.11.0"
+    name: clickhouse 
+
+
+  - src: git@github.com:le0lex/vector-role.git
+    scm: git
+    version: "0.0.1"
+    name: vector-role 
+
+  - src: git@github.com:le0lex/lighthouse-role.git
+    scm: git
+    version: "0.0.1"
+    name: lighthouse-role
+```
+
+
+2. Создаем папку `roles` и скачиваем туда роль при помощи `ansible-galaxy`:
+
+![HW_8.4_t2.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_8.4_t2.png)   
+
+3. Создаем роль `vector-role`:
+
+![HW_8.4_t3-1.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_8.4_t3-1.png) 
+
+Добавляем в файл `vars/main.yml` переменные:
+
+![HW_8.4_t3-2.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_8.4_t3-2.png)
+
+Добавляем `tasks` в файл `tasks/main.yml`:
+
+![HW_8.4_t3-3.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_8.4_t3-3.png)
+
+4. Создаем роль `lighthouse-role`:
+
+![HW_8.4_t4-1.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_8.4_t4-1.png)
+
+Добавляем `tasks` в файл `tasks/main.yml`:
+
+![HW_8.4_t4-2.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_8.4_t4-2.png)
+
+5. Выкладываем созданные роли в репозитории, созданные при подготовке:
+
+`vector-role`:
+
+![HW_8.4_t5-1.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_8.4_t5-1.png)
+
+`lighthouse-role`:
+
+![HW_8.4_t5-2.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_8.4_t5-2.png)
+
+6. Добавление описания ролей в `README.md`:
+
+![8_4_12.png](https://github.com/psvitov/devops-netology/blob/main/Homework/mnt_homework_8_4/8_4_12.png)
+
+![8_4_13.png](https://github.com/psvitov/devops-netology/blob/main/Homework/mnt_homework_8_4/8_4_13.png)
+
+7. Добавляем вновь созданные `roles` в `requirements.yml` в playbook:
+
+![HW_8.4_t7.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_8.4_t7.png)
+
+8. Пересобираем `playbook` на использование ролей:
+
+![HW_8.4_t8.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_8.4_t8.png)
+
+9. Ссылки на репозитории:
+
+- [playbook](https://github.com/le0lex/devops-netology/tree/main/ansible/playbook_8.4_v2)
+- [vector-role](https://github.com/le0lex/vector-role.git)
+- [lighthouse-role](https://github.com/le0lex/lighthouse-role.git)
+
+---
+
+
 # Домашнее задание к занятию "08.03 Использование Yandex Cloud"
 
 ## Подготовка к выполнению

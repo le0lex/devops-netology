@@ -108,9 +108,13 @@ leolex@leolex-VirtualBox:~/SW/pycharm-community-2021.3.3/my_git01/ansible/playbo
 
 6. Добавление описания ролей в `README.md`:
 
-![8_4_12.png](https://github.com/psvitov/devops-netology/blob/main/Homework/mnt_homework_8_4/8_4_12.png)
+`vector-role`:
 
-![8_4_13.png](https://github.com/psvitov/devops-netology/blob/main/Homework/mnt_homework_8_4/8_4_13.png)
+![HW_8.4_t5-1.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_8.4_t5-1.png)
+
+`lighthouse-role`:
+
+![HW_8.4_t5-2.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_8.4_t5-2.png)
 
 7. Добавляем вновь созданные `roles` в `requirements.yml` в playbook:
 
@@ -122,7 +126,7 @@ leolex@leolex-VirtualBox:~/SW/pycharm-community-2021.3.3/my_git01/ansible/playbo
 
 9. Ссылки на репозитории:
 
-- [playbook](https://github.com/le0lex/devops-netology/tree/main/ansible/playbook_8.4_v2)
+- [playbook](https://github.com/le0lex/devops-netology/tree/main/ansible/playbook_8.4)
 - [vector-role](https://github.com/le0lex/vector-role.git)
 - [lighthouse-role](https://github.com/le0lex/lighthouse-role.git)
 

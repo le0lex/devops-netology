@@ -359,7 +359,7 @@ if __name__ == '__main__':
 
 2. Заполняем его содержимым и вносим необходимые правки:
 
-[my_own_module.py](https://github.com/le0lex/my_own_collection/blob/ad4613194cfad435056e82d6a306e5a1a31e3cfd/my_own_module.py)
+[my_own_module.py](https://github.com/le0lex/my_own_collection/blob/7b2d31b4693eaab27f93e021667029ea920528f7/my_own_module.py)
 
 Создаем файл `payload.json` 
 

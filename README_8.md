@@ -303,8 +303,11 @@ leolex@leolex-VirtualBox:~/SW/pycharm-community-2021.3.3/my_git01/HW_10.2/sandbo
       - "8125:8125/udp"
 
 ```
-
-Финальный вариант dashboard 
+Позже нашел решение проблемы - нужно быол в контейнере telegraf дать права на чтение и запись файлу /var/run/docker.sock  
+  
+![HW10.2_t5](https://github.com/le0lex/devops-netology/blob/main/screen/HW10.2_t5.png)  
+  
+Финальный вариант dashboard  
 ![dashboard ](https://github.com/le0lex/devops-netology/blob/main/screen/HW10.2_t4_7.png)
 
 ---

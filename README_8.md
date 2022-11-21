@@ -131,8 +131,8 @@ podman version 4.0.2
 
 5. Ссылка на коммит с рабочим сценарием (ветка master): [tox](https://github.com/le0lex/vector-role.git)
 
-### Tox - Fixed  
-
+### Tox - Fixed   
+  
 Поправил molecule.yml:  
 ```
 ---
@@ -152,21 +152,14 @@ playbooks:
 verifier:
   name: ansible  
   ```
+    
+Результат:  
+![HW_8.5_tox_3_fixed.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_8.5_tox_3_fixed.png)  
   
-  ```
-  FileNotFoundError: [Errno 2] No such file or directory: 'ansible'
-ERROR: InvocationError for command /opt/vector-role/.tox/py39-ansible30/bin/molecule test -s default --destroy always (exited with code 1)
-___________________________________________ summary ____________________________________________
-  py37-ansible210: commands succeeded
-ERROR:   py37-ansible30: commands failed
-  py39-ansible210: commands succeeded
-ERROR:   py39-ansible30: commands failed
-```
-
-Full log:
-[tox_fixed_log](https://github.com/le0lex/devops-netology/blob/60c874cfc654238020b22686316d969bc93421e0/ansible/playbook_8.5/fixed_log.txt)
-
-Судя по выводу, результат лучше, но часть тестов не прошла.  
+Full log:  
+[tox_fixed_log](https://github.com/le0lex/devops-netology/blob/b5aa923de0e4b7be0a3a711549ee925a104cd28d/ansible/playbook_8.5/tox_fixed_log.txt)
+  
+Тест прошел успешно.    
   
 ---
 

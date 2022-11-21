@@ -1,3 +1,123 @@
+# Домашнее задание к занятию "10.03. Grafana"
+
+## Обязательные задания
+
+### Задание 1
+Используя директорию [help](./help) внутри данного домашнего задания - запустите связку prometheus-grafana.
+
+Зайдите в веб-интерфейс графана, используя авторизационные данные, указанные в манифесте docker-compose.
+
+Подключите поднятый вами prometheus как источник данных.
+
+Решение домашнего задания - скриншот веб-интерфейса grafana со списком подключенных Datasource.
+
+---
+### Ответ:
+---
+
+1. Запускаем связку `prometheus-grafana`, веб-интерфейс:
+
+![HW10.3_t1_1](https://github.com/le0lex/devops-netology/blob/main/screen/HW10.3_t1_1.png)
+
+2. Подключаем `prometheus` как источник данных, тестируем соединение:
+
+![HW10.3_t1_2](https://github.com/le0lex/devops-netology/blob/main/screen/HW10.3_t1_2.png)
+
+
+## Задание 2
+Изучите самостоятельно ресурсы:
+- [promql-for-humans](https://timber.io/blog/promql-for-humans/#cpu-usage-by-instance)
+- [understanding prometheus cpu metrics](https://www.robustperception.io/understanding-machine-cpu-usage)
+
+Создайте Dashboard и в ней создайте следующие Panels:
+- Утилизация CPU для nodeexporter (в процентах, 100-idle)
+- CPULA 1/5/15
+- Количество свободной оперативной памяти
+- Количество места на файловой системе
+
+Для решения данного ДЗ приведите promql запросы для выдачи этих метрик, а также скриншот получившейся Dashboard.
+
+---
+### Ответ:
+---
+
+1. Создаем `Dashboard` и добавляем панели:
+
+- Утилизация CPU
+
+```
+100 - (avg by (instance) (rate(node_cpu_seconds_total{job="nodeexporter",mode="idle"}[1m])) * 100) 
+```
+
+- CPULA 1/5/15
+
+```
+node_load1
+
+node_load5
+
+node_load15
+```
+
+- Количество свободной оперативной памяти
+
+```
+node_memory_Inactive_bytes/node_memory_MemAvailable_bytes*100
+```
+
+- Количество места на файловой системе
+
+```
+node_filesystem_avail_bytes{fstype!~"tmpfs|fuse.lxcfs|squashfs"} / node_filesystem_size_bytes{fstype!~"tmpfs|fuse.lxcfs|squashfs"}*100  
+```
+
+Скриншот получившегося `Dashboard` с добавленными панелями:
+
+![HW10.3_t2](https://github.com/le0lex/devops-netology/blob/main/screen/HW10.3_t2.png)
+
+
+
+## Задание 3
+Создайте для каждой Dashboard подходящее правило alert (можно обратиться к первой лекции в блоке "Мониторинг").
+
+Для решения ДЗ - приведите скриншот вашей итоговой Dashboard.
+
+---
+### Ответ:
+---
+
+Алерты для каждой панели:
+
+![HW10.3_t3_1](https://github.com/le0lex/devops-netology/blob/main/screen/HW10.3_t3_1.png)
+
+![HW10.3_t3_2](https://github.com/le0lex/devops-netology/blob/main/screen/HW10.3_t3_2.png)
+
+![HW10.3_t3_3](https://github.com/le0lex/devops-netology/blob/main/screen/HW10.3_t3_3.png)
+
+![HW10.3_t3_4](https://github.com/le0lex/devops-netology/blob/main/screen/HW10.3_t3_4.png)
+
+Финальный `Dashboard` с панелями и добавленными алертами:
+
+![HW10.3_t3_5](https://github.com/le0lex/devops-netology/blob/main/screen/HW10.3_t3_5.png)
+
+
+## Задание 4
+Сохраните ваш Dashboard.
+
+Для этого перейдите в настройки Dashboard, выберите в боковом меню "JSON MODEL".
+
+Далее скопируйте отображаемое json-содержимое в отдельный файл и сохраните его.
+
+В решении задания - приведите листинг этого файла.
+
+---
+### Ответ:
+---
+
+Ссылка на листинг json-содержимого `Dashboard`: [dashboard.json](https://github.com/le0lex/devops-netology/blob/cf481016fc3a016175c073f4ac800be1f50c664f/HW_10.3/dashboard.json)  
+
+---
+
 # Домашнее задание к занятию "10.02. Системы мониторинга"
 
 ## Обязательные задания

@@ -15,11 +15,11 @@
 ### Ответ:
 ---
 
-1. Запускаем связку `prometheus-grafana`, веб-интерфейс:
+1. Запускаем связку `prometheus-grafana`:
 
 ![HW10.3_t1_1](https://github.com/le0lex/devops-netology/blob/main/screen/HW10.3_t1_1.png)
 
-2. Подключаем `prometheus` как источник данных, тестируем соединение:
+2. Подключаем `prometheus` как источник данных:
 
 ![HW10.3_t1_2](https://github.com/le0lex/devops-netology/blob/main/screen/HW10.3_t1_2.png)
 

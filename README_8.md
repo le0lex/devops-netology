@@ -1,3 +1,175 @@
+# Домашнее задание к занятию "08.05 Тестирование Roles"
+
+## Подготовка к выполнению
+1. Установите molecule: `pip3 install "molecule==3.5.2"`
+2. Выполните `docker pull aragast/netology:latest` -  это образ с podman, tox и несколькими пайтонами (3.7 и 3.9) внутри
+
+---
+### Ответ:
+---
+
+1. Устанавливаем `molecule` и проверяем:
+
+![HW_8.5_t0-1.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_8.5_t0-1.png)
+
+2. Скачиваем и проверяем docker-образ:
+
+![HW_8.5_t0-2.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_8.5_t0-2.png)
+
+
+
+## Основная часть
+
+Наша основная цель - настроить тестирование наших ролей. Задача: сделать сценарии тестирования для vector. Ожидаемый результат: все сценарии успешно проходят тестирование ролей.
+
+### Molecule
+
+1. Запустите  `molecule test -s centos7` внутри корневой директории clickhouse-role, посмотрите на вывод команды.
+2. Перейдите в каталог с ролью vector-role и создайте сценарий тестирования по умолчанию при помощи `molecule init scenario --driver-name docker`.
+3. Добавьте несколько разных дистрибутивов (centos:8, ubuntu:latest) для инстансов и протестируйте роль, исправьте найденные ошибки, если они есть.
+4. Добавьте несколько assert'ов в verify.yml файл для  проверки работоспособности vector-role (проверка, что конфиг валидный, проверка успешности запуска, etc). Запустите тестирование роли повторно и проверьте, что оно прошло успешно.
+5. Добавьте новый тег на коммит с рабочим сценарием в соответствии с семантическим версионированием.
+
+---
+### Ответ:
+---
+
+1. Запускаем `molecule` в директории clickhouse:
+
+![HW_8.5_t1.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_8.5_t1.png)
+
+2. Сценарий тестирования для роли `vectorrole`:
+
+![HW_8.5_t2.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_8.5_t2.png)
+
+3. Добавляем дистрибутивы в файл `molecule.yml`:
+
+> 
+    platforms:
+      - name: centos_7
+        image: centos:7
+        pre_build_image: true
+      - name: centos_8
+        image: centos:8_update
+        pre_build_image: true
+      - name: ubuntu
+        image: ubuntu:python
+        pre_build_image: true
+        
+`molecule test`:
+
+![HW_8.5_t3.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_8.5_t3.png)
+
+Полный результат работы в файле: [m_test_1.md](https://github.com/le0lex/vector-role/blob/f0f6a09a09713d37bbe02ee9afa060a88e935c38/m_test_1.md)
+
+4. Добавляем assert в verify.yml и запускаем `molecule test` снова:
+
+![HW_8.5_t4_2.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_8.5_t4_2.png)
+
+[m_test_2.md](https://github.com/le0lex/vector-role/blob/f0f6a09a09713d37bbe02ee9afa060a88e935c38/m_test_2.md)
+
+5. Ссылка на коммит с рабочим сценарием: [molecule](https://github.com/le0lex/vector-role.git)
+
+
+### Tox
+
+1. Добавьте в директорию с vector-role файлы из [директории](./example)
+2. Запустите `docker run --privileged=True -v <path_to_repo>:/opt/vector-role -w /opt/vector-role -it aragast/netology:latest /bin/bash`, где path_to_repo - путь до корня репозитория с vector-role на вашей файловой системе.
+3. Внутри контейнера выполните команду `tox`, посмотрите на вывод.
+5. Создайте облегчённый сценарий для `molecule` с драйвером `molecule_podman`. Проверьте его на исполнимость.
+6. Пропишите правильную команду в `tox.ini` для того чтобы запускался облегчённый сценарий.
+8. Запустите команду `tox`. Убедитесь, что всё отработало успешно.
+9. Добавьте новый тег на коммит с рабочим сценарием в соответствии с семантическим версионированием.
+
+После выполнения у вас должно получится два сценария molecule и один tox.ini файл в репозитории. Ссылка на репозиторий являются ответами на домашнее задание. Не забудьте указать в ответе теги решений Tox и Molecule заданий.
+
+---
+### Ответ:
+---
+
+1. Файлы добавлены, контейнер запущен:
+
+![HW_8.5_tox_1.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_8.5_tox_1.png)
+
+2. Исправляем tox.ini для проверки своей роли `default`, запускаем `tox`, получаем ошибки: так как в образе не установлен `docker`
+
+Docker не установлен:
+```
+[root@d6767b2e66f2 vector-role]# docker --version
+bash: docker: command not found
+[root@d6767b2e66f2 vector-role]# podman --version
+podman version 4.0.2
+[root@d6767b2e66f2 vector-role]# exit
+```
+
+![HW_8.5_tox_2.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_8.5_tox_2.png)
+
+
+
+3. Меняем драйвер на `podman` и облегчаем сценарий
+
+> 
+    [tox]
+    minversion = 1.8
+    basepython = python3.6
+    envlist = py{37,39}-ansible{210}
+    skipsdist = true
+
+    [testenv]
+    passenv = *
+    deps =
+        -r tox-requirements.txt
+        ansible210: ansible<3.0
+    commands =
+        {posargs:molecule test -s default --destroy always}
+        
+4. tox прошел по сценарию molecule, но завершился ошибками. Видимо, при работе с molecule использовались docker-образы без предустановленного python.
+
+![HW_8.5_tox_3.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_8.5_tox_3.png)
+
+Полный вывод в [файле](https://github.com/le0lex/vector-role/blob/3939dac24acc02d5f66453fad0affcf2cb1164a8/tox-output.md)
+
+5. Ссылка на коммит с рабочим сценарием (ветка master): [tox](https://github.com/le0lex/vector-role.git)
+
+### Tox - Fixed  
+
+Поправил molecule.yml:  
+```
+---
+dependency:
+  name: galaxy
+driver:
+  name: podman
+platforms:
+ - name: ubuntu
+   image: docker.io/pycontribs/ubuntu:latest
+   pre_build_image: true
+   privileged: true
+provisioner:
+  name: ansible
+playbooks:
+  prepare: prepare.yml
+verifier:
+  name: ansible  
+  ```
+  
+  ```
+  FileNotFoundError: [Errno 2] No such file or directory: 'ansible'
+ERROR: InvocationError for command /opt/vector-role/.tox/py39-ansible30/bin/molecule test -s default --destroy always (exited with code 1)
+___________________________________________ summary ____________________________________________
+  py37-ansible210: commands succeeded
+ERROR:   py37-ansible30: commands failed
+  py39-ansible210: commands succeeded
+ERROR:   py39-ansible30: commands failed
+```
+
+Full log:
+[tox_fixed_log](https://github.com/le0lex/devops-netology/blob/60c874cfc654238020b22686316d969bc93421e0/ansible/playbook_8.5/fixed_log.txt)
+
+Судя по выводу, результат лучше, но часть тестов не прошла.  
+  
+---
+
 # Домашнее задание к занятию "10.03. Grafana"
 
 ## Обязательные задания
@@ -918,140 +1090,6 @@ if __name__ == '__main__':
   
 ---
 
-# Домашнее задание к занятию "08.05 Тестирование Roles"
-
-## Подготовка к выполнению
-1. Установите molecule: `pip3 install "molecule==3.5.2"`
-2. Выполните `docker pull aragast/netology:latest` -  это образ с podman, tox и несколькими пайтонами (3.7 и 3.9) внутри
-
----
-### Ответ:
----
-
-1. Устанавливаем `molecule` и проверяем:
-
-![HW_8.5_t0-1.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_8.5_t0-1.png)
-
-2. Скачиваем и проверяем docker-образ:
-
-![HW_8.5_t0-2.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_8.5_t0-2.png)
-
-
-
-## Основная часть
-
-Наша основная цель - настроить тестирование наших ролей. Задача: сделать сценарии тестирования для vector. Ожидаемый результат: все сценарии успешно проходят тестирование ролей.
-
-### Molecule
-
-1. Запустите  `molecule test -s centos7` внутри корневой директории clickhouse-role, посмотрите на вывод команды.
-2. Перейдите в каталог с ролью vector-role и создайте сценарий тестирования по умолчанию при помощи `molecule init scenario --driver-name docker`.
-3. Добавьте несколько разных дистрибутивов (centos:8, ubuntu:latest) для инстансов и протестируйте роль, исправьте найденные ошибки, если они есть.
-4. Добавьте несколько assert'ов в verify.yml файл для  проверки работоспособности vector-role (проверка, что конфиг валидный, проверка успешности запуска, etc). Запустите тестирование роли повторно и проверьте, что оно прошло успешно.
-5. Добавьте новый тег на коммит с рабочим сценарием в соответствии с семантическим версионированием.
-
----
-### Ответ:
----
-
-1. Запускаем `molecule` в директории clickhouse:
-
-![HW_8.5_t1.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_8.5_t1.png)
-
-2. Сценарий тестирования для роли `vectorrole`:
-
-![HW_8.5_t2.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_8.5_t2.png)
-
-3. Добавляем дистрибутивы в файл `molecule.yml`:
-
-> 
-    platforms:
-      - name: centos_7
-        image: centos:7
-        pre_build_image: true
-      - name: centos_8
-        image: centos:8_update
-        pre_build_image: true
-      - name: ubuntu
-        image: ubuntu:python
-        pre_build_image: true
-        
-`molecule test`:
-
-![HW_8.5_t3.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_8.5_t3.png)
-
-Полный результат работы в файле: [m_test_1.md](https://github.com/le0lex/vector-role/blob/f0f6a09a09713d37bbe02ee9afa060a88e935c38/m_test_1.md)
-
-4. Добавляем assert в verify.yml и запускаем `molecule test` снова:
-
-![HW_8.5_t4_2.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_8.5_t4_2.png)
-
-[m_test_2.md](https://github.com/le0lex/vector-role/blob/f0f6a09a09713d37bbe02ee9afa060a88e935c38/m_test_2.md)
-
-5. Ссылка на коммит с рабочим сценарием: [molecule](https://github.com/le0lex/vector-role.git)
-
-
-### Tox
-
-1. Добавьте в директорию с vector-role файлы из [директории](./example)
-2. Запустите `docker run --privileged=True -v <path_to_repo>:/opt/vector-role -w /opt/vector-role -it aragast/netology:latest /bin/bash`, где path_to_repo - путь до корня репозитория с vector-role на вашей файловой системе.
-3. Внутри контейнера выполните команду `tox`, посмотрите на вывод.
-5. Создайте облегчённый сценарий для `molecule` с драйвером `molecule_podman`. Проверьте его на исполнимость.
-6. Пропишите правильную команду в `tox.ini` для того чтобы запускался облегчённый сценарий.
-8. Запустите команду `tox`. Убедитесь, что всё отработало успешно.
-9. Добавьте новый тег на коммит с рабочим сценарием в соответствии с семантическим версионированием.
-
-После выполнения у вас должно получится два сценария molecule и один tox.ini файл в репозитории. Ссылка на репозиторий являются ответами на домашнее задание. Не забудьте указать в ответе теги решений Tox и Molecule заданий.
-
----
-### Ответ:
----
-
-1. Файлы добавлены, контейнер запущен:
-
-![HW_8.5_tox_1.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_8.5_tox_1.png)
-
-2. Исправляем tox.ini для проверки своей роли `default`, запускаем `tox`, получаем ошибки: так как в образе не установлен `docker`
-
-Docker не установлен:
-```
-[root@d6767b2e66f2 vector-role]# docker --version
-bash: docker: command not found
-[root@d6767b2e66f2 vector-role]# podman --version
-podman version 4.0.2
-[root@d6767b2e66f2 vector-role]# exit
-```
-
-![HW_8.5_tox_2.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_8.5_tox_2.png)
-
-
-
-3. Меняем драйвер на `podman` и облегчаем сценарий
-
-> 
-    [tox]
-    minversion = 1.8
-    basepython = python3.6
-    envlist = py{37,39}-ansible{210}
-    skipsdist = true
-
-    [testenv]
-    passenv = *
-    deps =
-        -r tox-requirements.txt
-        ansible210: ansible<3.0
-    commands =
-        {posargs:molecule test -s default --destroy always}
-        
-4. tox прошел по сценарию molecule, но завершился ошибками. Видимо, при работе с molecule использовались docker-образы без предустановленного python.
-
-![HW_8.5_tox_3.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_8.5_tox_3.png)
-
-Полный вывод в [файле](https://github.com/le0lex/vector-role/blob/3939dac24acc02d5f66453fad0affcf2cb1164a8/tox-output.md)
-
-5. Ссылка на коммит с рабочим сценарием (ветка master): [tox](https://github.com/le0lex/vector-role.git)
-
----
 
 # Домашнее задание к занятию "8.4 Работа с Roles"
 

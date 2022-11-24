@@ -157,7 +157,9 @@ while (index < 10):
 Проверяем директорию ~/.m2/repository/:  
   
 ![HW9.3_t_3-4.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.3_t_3-4.png) 
-  
+ 
+[pom.xml](https://github.com/le0lex/devops-netology/blob/472457bfa8a7337363841bdbdfb1e45187dd0878/pom.xml) 
+
 ---
 
 

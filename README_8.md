@@ -1,3 +1,179 @@
+# Домашнее задание к занятию "09.04 Jenkins"
+
+## Подготовка к выполнению
+
+1. Создать 2 VM: для jenkins-master и jenkins-agent.
+2. Установить jenkins при помощи playbook'a.
+3. Запустить и проверить работоспособность.
+4. Сделать первоначальную настройку.
+
+---
+### Ответ:
+---
+
+1. Подготовлены 2 VM:  
+![HW9.4_pt1.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_pt1)
+
+2. Установлен Jenkins:  
+![HW9.4_pt2.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_pt2)
+
+3. Проверена работоспособность
+![HW9.4_pt3.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_pt3)
+  
+## Основная часть
+
+1. Сделать Freestyle Job, который будет запускать `molecule test` из любого вашего репозитория с ролью.
+2. Сделать Declarative Pipeline Job, который будет запускать `molecule test` из любого вашего репозитория с ролью.
+3. Перенести Declarative Pipeline в репозиторий в файл `Jenkinsfile`.
+4. Создать Multibranch Pipeline на запуск `Jenkinsfile` из репозитория.
+5. Создать Scripted Pipeline, наполнить его скриптом из [pipeline](./pipeline).
+6. Внести необходимые изменения, чтобы Pipeline запускал `ansible-playbook` без флагов `--check --diff`, если не установлен параметр при запуске джобы (prod_run = True), по умолчанию параметр имеет значение False и запускает прогон с флагами `--check --diff`.
+7. Проверить работоспособность, исправить ошибки, исправленный Pipeline вложить в репозиторий в файл `ScriptedJenkinsfile`.
+8. Отправить ссылку на репозиторий с ролью и Declarative Pipeline и Scripted Pipeline.
+
+---
+### Ответ:
+---
+
+1. Создан `Freestyle Job`, настроена сборка:  
+![HW9.4_t1-1.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_t1-1)  
+
+![HW9.4_t1-2.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_t1-2) 
+
+![HW9.4_t1-3.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_t1-3) 
+
+Лог запуска: [Freestyle Job](https://github.com/le0lex/devops-netology/blob/785153c582d182d69890c62d29151fa5039bbba8/HW_9.4/HW9.4_t1_freestyle_job.log)  
+
+2. Создан `Declarative Pipeline Job`, настраиваем сборку и запускаем:
+
+![HW9.4_t2-1.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_t2-1)
+
+![HW9.4_t2-2.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_t2-2)
+
+```
+pipeline {
+    agent {
+        label 'linux-YC'
+    }
+    stages {
+        stage('Git clone') {
+            steps {
+                git branch: 'master', url: 'https://github.com/le0lex/vector-role.git'
+            }
+        }
+        stage('molecule install') {
+            steps {
+                sh 'pip3 install molecule molecule_docker'
+            }
+        }
+        stage('Directory') {
+            steps {
+                dir('/opt/jenkins_agent/workspace/HW9.4_pipeline/') {
+                sh 'molecule test'    }
+                }
+            }
+        }
+        }
+```
+
+
+Лог запуска: [Declarative Pipeline Job](https://github.com/le0lex/devops-netology/blob/785153c582d182d69890c62d29151fa5039bbba8/HW_9.4/HW9.4_t2_d-pipeline_job.log)
+
+На `jenkins-agent` нет необходимых docker-контейнеров, которые использовались при выполнении в домашнем задании 8.5, поэтому задача вываливается с ошибкой.  
+
+3. Переносим `Declarative Pipeline Job` в репозиторий в файл [`Jenkinsfile`](https://github.com/le0lex/devops-netology/blob/785153c582d182d69890c62d29151fa5039bbba8/HW_9.4/Jenkinsfile)  
+
+![HW9.4_t3-1.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_t3-1)
+
+4. Создан `Multibranch Pipeline` на запуск `Jenkinsfile` из репозитория:
+
+![HW9.4_t4-1.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_t4-1)
+
+![HW9.4_t4-2.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_t4-2)
+
+```
+pipeline {
+    agent {
+        label 'linux-YC'
+    }
+    stages {
+        stage('Git clone') {
+            steps {
+                git branch: 'master', url: 'https://github.com/le0lex/vector-role.git'
+            }
+        }
+        stage('molecule install') {
+            steps {
+                sh 'pip3 install molecule molecule_docker'
+            }
+        }
+        stage('Directory') {
+            steps {
+                dir('/opt/jenkins_agent/workspace/HW9.4_pipeline/') {
+                sh 'molecule test'    }
+                }
+            }
+        }
+        }
+```
+
+Лог запуска: [Multibranch Pipeline Job](https://github.com/le0lex/devops-netology/blob/785153c582d182d69890c62d29151fa5039bbba8/HW_9.4/HW9.4_t5_scr-pipeline_job_log.log)  
+
+
+На `jenkins-agent` нет необходимых docker-контейнеров, которые использовались при выполнении в домашнем задании 8.5, поэтому задача вываливается с ошибкой.    
+
+![HW9.4_t5-1.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_t5-1
+
+![HW9.4_t5-2.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_t5-2)
+
+```
+node("linux-YC"){
+    stage("Git checkout"){
+        git credentialsId: '5ac0095d-0185-431b-94da-09a0ad9b0e2c', url: 'git@github.com:aragastmatb/example-playbook.git'
+    }
+    stage("Sample define secret_check"){
+        secret_check=true
+    }
+    
+    if (secret_check){
+        stage("Run playbook"){
+        sh 'ansible-playbook site.yml -i inventory/prod.yml'
+            }
+        }
+    else{
+        stage("Run playbook with --check --diff"){
+            sh 'ansible-playbook site.yml -i inventory/prod.yml --check --diff'
+            }
+       }
+    }
+```
+
+Так как указан CredentialId которого нет, то задание вываливается с ошибкой.  
+
+Лог запуска: [Multibranch Pipeline log](https://github.com/le0lex/devops-netology/blob/785153c582d182d69890c62d29151fa5039bbba8/HW_9.4/HW9.4_t5_scr-pipeline_job_log.log)  
+
+6. Добавляем `ScriptedJenkinsfile` в репозиторий.
+
+Ссылки на коммиты репозитория:
+
+[`Declarative Pipeline`](https://github.com/le0lex/devops-netology/blob/27d8ddcbb4d8296e56f4edb14f2a45e2d3b1c84e/HW_9.4/Jenkinsfile)
+[`Scripted Pipeline`](https://github.com/le0lex/devops-netology/blob/27d8ddcbb4d8296e56f4edb14f2a45e2d3b1c84e/HW_9.4/HW9.4_t5_scr-pipeline_job_script)
+
+
+
+## Необязательная часть
+
+1. Создать скрипт на groovy, который будет собирать все Job, которые завершились хотя бы раз неуспешно. Добавить скрипт в репозиторий с решением с названием `AllJobFailure.groovy`.
+2. Создать Scripted Pipeline таким образом, чтобы он мог сначала запустить через Ya.Cloud CLI необходимое количество инстансов, прописать их в инвентори плейбука и после этого запускать плейбук. Тем самым, мы должны по нажатию кнопки получить готовую к использованию систему.
+
+---
+
+### Как оформить ДЗ?
+
+Выполненное домашнее задание пришлите ссылкой на .md-файл в вашем репозитории.
+
+---
+
 # Домашнее задание к занятию "10.06. Инцидент-менеджмент"
 
 ## Задание 

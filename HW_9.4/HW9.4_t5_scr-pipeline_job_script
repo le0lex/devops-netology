@@ -1,0 +1,15 @@
+node('linux-YC'){
+    stage("Git checkout"){
+        git branch: 'another-one', url: 'https://github.com/aragastmatb/example-playbook.git'
+    }
+    if (env.PROD_RUN == "true") {
+        stage("Run playbook without --check --diff"){
+            sh 'ansible-playbook site.yml -i inventory/prod.yml'
+        } 
+    }
+    else{
+        stage("Run playbook with --check --diff"){
+            sh 'ansible-playbook site.yml -i inventory/prod.yml --check --diff'
+        } 
+    }
+}

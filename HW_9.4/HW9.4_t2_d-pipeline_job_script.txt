@@ -1,0 +1,23 @@
+pipeline {
+    agent {
+        label 'linux-YC'
+    }
+    stages {
+        stage('Git clone') {
+            steps {
+                git branch: 'master', url: 'https://github.com/le0lex/vector-role.git'
+            }
+        }
+        stage('molecule install') {
+            steps {
+                sh 'pip3 install molecule molecule_docker'
+            }
+        }
+        stage('Directory') {
+            steps {
+                dir('/opt/jenkins_agent/workspace/HW9.4_pipeline/') {
+                sh 'molecule test'    }
+                }
+            }
+        }
+        }

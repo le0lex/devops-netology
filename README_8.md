@@ -12,13 +12,13 @@
 ---
 
 1. Подготовлены 2 VM:  
-![HW9.4_pt1.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_pt1)
+![HW9.4_pt1.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_pt1.png)
 
 2. Установлен Jenkins:  
-![HW9.4_pt2.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_pt2)
+![HW9.4_pt2.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_pt2.png)
 
 3. Проверена работоспособность
-![HW9.4_pt3.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_pt3)
+![HW9.4_pt3.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_pt3.png)
   
 ## Основная часть
 
@@ -36,19 +36,19 @@
 ---
 
 1. Создан `Freestyle Job`, настроена сборка:  
-![HW9.4_t1-1.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_t1-1)  
+![HW9.4_t1-1.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_t1-1.png)  
 
-![HW9.4_t1-2.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_t1-2) 
+![HW9.4_t1-2.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_t1-2.png) 
 
-![HW9.4_t1-3.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_t1-3) 
+![HW9.4_t1-3.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_t1-3.png) 
 
 Лог запуска: [Freestyle Job](https://github.com/le0lex/devops-netology/blob/785153c582d182d69890c62d29151fa5039bbba8/HW_9.4/HW9.4_t1_freestyle_job.log)  
 
 2. Создан `Declarative Pipeline Job`, настраиваем сборку и запускаем:
 
-![HW9.4_t2-1.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_t2-1)
+![HW9.4_t2-1.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_t2-1.png)
 
-![HW9.4_t2-2.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_t2-2)
+![HW9.4_t2-2.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_t2-2.png)
 
 ```
 pipeline {
@@ -83,13 +83,13 @@ pipeline {
 
 3. Переносим `Declarative Pipeline Job` в репозиторий в файл [`Jenkinsfile`](https://github.com/le0lex/devops-netology/blob/785153c582d182d69890c62d29151fa5039bbba8/HW_9.4/Jenkinsfile)  
 
-![HW9.4_t3-1.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_t3-1)
+![HW9.4_t3-1.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_t3-1.png)
 
 4. Создан `Multibranch Pipeline` на запуск `Jenkinsfile` из репозитория:
 
-![HW9.4_t4-1.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_t4-1)
+![HW9.4_t4-1.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_t4-1.png)
 
-![HW9.4_t4-2.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_t4-2)
+![HW9.4_t4-2.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_t4-2.png)
 
 ```
 pipeline {
@@ -122,9 +122,10 @@ pipeline {
 
 На `jenkins-agent` нет необходимых docker-контейнеров, которые использовались при выполнении в домашнем задании 8.5, поэтому задача вываливается с ошибкой.    
 
-![HW9.4_t5-1.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_t5-1
+![HW9.4_t5-1.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_t5-1.png)
 
-![HW9.4_t5-2.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_t5-2)
+
+![HW9.4_t5-2.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW9.4_t5-2.png)
 
 ```
 node("linux-YC"){

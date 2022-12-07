@@ -1,3 +1,148 @@
+
+# Домашнее задание к занятию "09.05 Teamcity"
+
+## Подготовка к выполнению
+
+1. В Ya.Cloud создайте новый инстанс (4CPU4RAM) на основе образа `jetbrains/teamcity-server`
+2. Дождитесь запуска teamcity, выполните первоначальную настройку
+3. Создайте ещё один инстанс(2CPU4RAM) на основе образа `jetbrains/teamcity-agent`. Пропишите к нему переменную окружения `SERVER_URL: "http://<teamcity_url>:8111"`
+4. Авторизуйте агент
+5. Сделайте fork [репозитория](https://github.com/aragastmatb/example-teamcity)
+6. Создать VM (2CPU4RAM) и запустить [playbook](./infrastructure)
+
+---
+### Ответ:
+---
+
+1. Созданы 2 виртуальные машины:  
+
+![HW_9.5_pt1.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_9.5_pt1.png)
+
+2. ВМ `Teamcity`:  
+
+![HW_9.5_pt2.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_9.5_pt2.png)
+
+![HW_9.5_pt3.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_9.5_pt3.png)
+
+![HW_9.5_pt4.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_9.5_pt4.png)
+
+3. Создана ВМ для `Nexus`:  
+
+![HW_9.5_pt5.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_9.5_pt5.png)
+
+![HW_9.5_pt6.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_9.5_pt6.png)
+
+![HW_9.5_pt7.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_9.5_pt7.png)
+
+![HW_9.5_pt8.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_9.5_pt8.png)
+
+  
+## Основная часть  
+
+1. Создайте новый проект в teamcity на основе fork  
+2. Сделайте autodetect конфигурации  
+3. Сохраните необходимые шаги, запустите первую сборку master'a  
+4. Поменяйте условия сборки: если сборка по ветке `master`, то должен происходит `mvn clean deploy`, иначе `mvn clean test`  
+5. Для deploy будет необходимо загрузить [settings.xml](./teamcity/settings.xml) в набор конфигураций maven у  teamcity, предварительно записав туда креды для подключения к nexus  
+6. В pom.xml необходимо поменять ссылки на репозиторий и nexus  
+7. Запустите сборку по master, убедитесь что всё прошло успешно, артефакт появился в nexus  
+8. Мигрируйте `build configuration` в репозиторий  
+9. Создайте отдельную ветку `feature/add_reply` в репозитории  
+10. Напишите новый метод для класса Welcomer: метод должен возвращать произвольную реплику, содержащую слово   `hunter`  
+11. Дополните тест для нового метода на поиск слова `hunter` в новой реплике  
+12. Сделайте push всех изменений в новую ветку в репозиторий  
+13. Убедитесь что сборка самостоятельно запустилась, тесты прошли успешно  
+14. Внесите изменения из произвольной ветки `feature/add_reply` в `master` через `Merge`  
+15. Убедитесь, что нет собранного артефакта в сборке по ветке `master`  
+16. Настройте конфигурацию так, чтобы она собирала `.jar` в артефакты сборки  
+17. Проведите повторную сборку мастера, убедитесь, что сбора прошла успешно и артефакты собраны  
+18. Проверьте, что конфигурация в репозитории содержит все настройки конфигурации из teamcity  
+19. В ответ предоставьте ссылку на репозиторий  
+
+---
+### Ответ:  
+---
+
+1. Создан новый проект на основе `fork` и проведён `autodetect` конфигурации:   
+
+![HW_9.5_t1.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_9.5_t1.png)
+
+2. Меняем условия сборки, редактируем базовый шаг и добавляем шаг `Deploy` предварительно добавив файл settings.xml:  
+
+![HW_9.5_t2.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_9.5_t2.png)
+
+
+3. В pom.xml меняем ссылку на репозиторий nexus  
+
+```
+	<properties>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+	</properties>
+	<distributionManagement>
+		<repository>
+				<id>nexus</id>
+				<url>http://51.250.106.170:8081/repository/maven-releases</url>
+		</repository>
+	</distributionManagement>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+```
+
+4. Запуск сборки и проверка `Nexus`:  
+
+![HW_9.5_t3.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_9.5_t3.png)
+
+![HW_9.5_t4.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_9.5_t4.png)
+
+5. Создана новая ветку в репозитории - `feature/add_reply`:
+
+![HW_9.5_t5.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_9.5_t5.png)
+
+6. Добавляем новый метод тестирования:
+
+- Welcomer.java
+
+>
+    public String sayHunter(){
+            return "You are good hunter";
+        }   
+
+- WelcomerTest.java
+
+>
+    @Test
+        public void welcomerSaysHunter() {
+            assertThat(welcomer.sayHunter(), containsString("hunter"));
+        }
+
+push всех изменений в новую ветку в репозиторий:  
+
+![HW_9.5_t6.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_9.5_t6.png)
+
+После внесения изменений `build` отработал автоматически:
+
+![HW_9.5_t7.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_9.5_t7.png)
+
+7. С помощью `merge` cливаем произвольную ветку `feature/add_reply` в `master`:  
+
+![HW_9.5_t8.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_9.5_t8.png)
+
+8. Настраиваем конфигурацию на сбор артефактов `jar`, проверяем работу:  
+
+![HW_9.5_t9.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_9.5_t9.png)
+
+
+9. Ссылка на репозиторий [le0lex/example-teamcity](https://github.com/le0lex/example-teamcity.git)
+
+---
+
 # Домашнее задание к занятию "09.04 Jenkins"
 
 ## Подготовка к выполнению

@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: main-nginx
+  labels:
+    app: main-nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: main-nginx
+  template:
+    metadata:
+      labels:
+        app: main-nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+      initContainers:
+      - name: delay
+        image: busybox
+        command: ['sh', '-c', "until nslookup mysvc.default.svc.cluster.local; do echo waiting for mysvc; sleep 2; done"]

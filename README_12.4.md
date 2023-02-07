@@ -60,10 +60,10 @@
 
 ![hw12.4_2.1.png](https://github.com/le0lex/devops-netology/blob/main/screen/hw12.4_2.1.png)
 
+`curl` с локального компьютера: 
+  
 ![hw12.4_2.2.png](https://github.com/le0lex/devops-netology/blob/main/screen/hw12.4_2.2.png)
   
-`curl` с локального компьютера:  
 ![hw12.4_2.3.png](https://github.com/le0lex/devops-netology/blob/main/screen/hw12.4_2.3.png)
-![hw12.4_2.4.png](https://github.com/le0lex/devops-netology/blob/main/screen/hw12.4_2.4.png)
 
 ------

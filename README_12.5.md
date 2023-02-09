@@ -35,8 +35,9 @@
 Созданы deployments и services:
 ![hw12.5_1.1.png](https://github.com/le0lex/devops-netology/blob/main/screen/hw12.5_1.1.png)
   
-[Deployment приложения _frontend_](https://github.com/le0lex/devops-netology/blob/7bfbfbfa8d38a5d52eab94acc5f7047eda24b4aa/HW_12.5/hw12.5_1.yaml)
-[Deployment приложения _backend_](https://github.com/le0lex/devops-netology/blob/7bfbfbfa8d38a5d52eab94acc5f7047eda24b4aa/HW_12.5/hw12.5_2.yaml)
+[Deployment приложения frontend](https://github.com/le0lex/devops-netology/blob/7bfbfbfa8d38a5d52eab94acc5f7047eda24b4aa/HW_12.5/hw12.5_1.yaml)
+  
+[Deployment приложения backend](https://github.com/le0lex/devops-netology/blob/7bfbfbfa8d38a5d52eab94acc5f7047eda24b4aa/HW_12.5/hw12.5_2.yaml)
   
 Приложения видят друг друга с помощью Service:
 ![hw12.5_1.4.png](https://github.com/le0lex/devops-netology/blob/main/screen/hw12.5_1.4.png)

@@ -59,6 +59,7 @@
   
 Создан Ingress:  
 ![hw12.5_2.3.png](https://github.com/le0lex/devops-netology/blob/main/screen/hw12.5_2.3.png)
+  
 [Ingress manifest](https://github.com/le0lex/devops-netology/blob/7bfbfbfa8d38a5d52eab94acc5f7047eda24b4aa/HW_12.5/hw12.5_ingress.yaml)
     
 Доступ с помощью браузера или `curl` с локального компьютера:  

@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: vol-ds
+  labels:
+    app: busybox
+spec:
+   selector:
+     matchLabels:
+       name: vol-ds
+   template:
+     metadata:
+       labels:
+         name: vol-ds
+     spec:
+       containers:
+         - image: busybox
+           name: busybox
+           volumeMounts:
+             - mountPath: /nodelog
+               name: vol-ds
+       volumes:
+         - name: vol-ds
+           hostPath:
+             path: /var/log

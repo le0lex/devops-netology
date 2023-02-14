@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dep-pvol
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pvolume
+  template:
+    metadata:
+      labels:
+        app: pvolume
+    spec:
+      containers:
+      - name: busybox
+        image: busybox
+        command: ['sh', '-c', 'while true; do date >> /output/output.log; sleep 5; done']
+        volumeMounts:
+          - mountPath: /output
+            name: pvolume
+      - name: multitool
+        image: wbitt/network-multitool
+        volumeMounts:
+           - mountPath: /input
+             name: pvolume
+      volumes:
+        - name: pvolume
+          persistentVolumeClaim:
+            claimName: pvc-vol

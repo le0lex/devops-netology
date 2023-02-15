@@ -69,11 +69,11 @@
   
 ![hw13.2_2.png](https://github.com/le0lex/devops-netology/blob/main/screen/hw13.2_2.png)
   
-Создан [Deployment](https://github.com/le0lex/devops-netology/blob/384c3c9c74483a54e17f954e0be7812de270392a/HW_13.2/hw13.2_2.yaml)  
-  
+Созданы [Deployment](https://github.com/le0lex/devops-netology/blob/384c3c9c74483a54e17f954e0be7812de270392a/HW_13.2/hw13.2_2.yaml)  и [PVC](https://github.com/le0lex/devops-netology/blob/384c3c9c74483a54e17f954e0be7812de270392a/HW_13.2/hw13.2_2_pvc.yaml)
+   
 ![hw13.2_2.1.png](https://github.com/le0lex/devops-netology/blob/main/screen/hw13.2_2.1.png)
   
-Созданы [PVC](https://github.com/le0lex/devops-netology/blob/384c3c9c74483a54e17f954e0be7812de270392a/HW_13.2/hw13.2_2_pvc.yaml) и [SC](https://github.com/le0lex/devops-netology/blob/384c3c9c74483a54e17f954e0be7812de270392a/HW_13.2/hw13.2_2_sc.yaml)   
+Создан [SC](https://github.com/le0lex/devops-netology/blob/384c3c9c74483a54e17f954e0be7812de270392a/HW_13.2/hw13.2_2_sc.yaml)   
   
 ![hw13.2_2.2.png](https://github.com/le0lex/devops-netology/blob/main/screen/hw13.2_2.2.png)
   

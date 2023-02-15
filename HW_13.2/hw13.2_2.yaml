@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dep-scvol
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scvolume
+  template:
+    metadata:
+      labels:
+        app: scvolume
+    spec:
+      containers:
+      - name: multitool
+        image: wbitt/network-multitool
+        command: ['sh', '-c', 'while true; do date >> /output/output.log; sleep 5; done']
+        volumeMounts:
+           - mountPath: /input
+             name: scvolume
+      volumes:
+        - name: scvolume
+          persistentVolumeClaim:
+            claimName: pvc-scvol

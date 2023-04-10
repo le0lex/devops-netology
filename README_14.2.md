@@ -25,7 +25,7 @@
 
 ### Задание 1. Ответ.  
   
-1. Развёрнуто 5 VM:
+1. Развёрнуто 5 VM:  
 ![HW_14.1_t001.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_14.1_t001.png)
   
 2. При помощи Kubeadm развернут кластер с одной master node:  

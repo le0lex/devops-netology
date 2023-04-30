@@ -52,4 +52,6 @@ kubectl apply -f https://raw.githubusercontent.com/netology-code/kuber-homeworks
 ![HW_14.5_t4_001.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_14.5_t4_001.png)
 ![HW_14.5_t4_002.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_14.5_t4_002.png)
   
+Проблема решена  
+
 ---

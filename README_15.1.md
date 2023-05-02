@@ -34,9 +34,9 @@ Resource Terraform для Yandex Cloud:
 ### Ответ
   
 План инфраструктуры и дополнительные файлы для Terraform:  
-[main.tf](https://github.com/le0lex/devops-netology/blob/058c754ee327b822da0e0bcda120d0a0face0280/HW_15.1/main.tf)
-[vars.tf](https://github.com/le0lex/devops-netology/blob/058c754ee327b822da0e0bcda120d0a0face0280/HW_15.1/vars.tf)
-[versions.tf](https://github.com/le0lex/devops-netology/blob/058c754ee327b822da0e0bcda120d0a0face0280/HW_15.1/versions.tf)
+[main.tf](https://github.com/le0lex/devops-netology/blob/058c754ee327b822da0e0bcda120d0a0face0280/HW_15.1/main.tf)  
+[vars.tf](https://github.com/le0lex/devops-netology/blob/058c754ee327b822da0e0bcda120d0a0face0280/HW_15.1/vars.tf)  
+[versions.tf](https://github.com/le0lex/devops-netology/blob/058c754ee327b822da0e0bcda120d0a0face0280/HW_15.1/versions.tf)  
   
 Используется зона ru-central1-b и облако netology  
 ![HW_15.1_t001.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_15.1_t001.png)

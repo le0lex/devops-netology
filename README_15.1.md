@@ -52,11 +52,11 @@ internal_ip_address_private = "192.168.20.8"
 ```
   
 Захожу на `public-instance`, используя инжектированный ключ    
-![HW_15.1_t003.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_15.1_t003.png) 
+![HW_15.1_t003.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_15.1_t003.png)  
 Пинг внешнего ресурса в интернете успешен.  
-  
+   
 Подключаюсь к `private-instance`, предварительно добавив на `public-instance` ключ id_rsa  
-![HW_15.1_t004.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_15.1_t004.png)
+![HW_15.1_t004.png](https://github.com/le0lex/devops-netology/blob/main/screen/HW_15.1_t004.png)  
 Пинг внешнего ресурса в интернете успешен. 
   
 ---

@@ -31,7 +31,7 @@
 План, и другие файлы для terraform.  
 [main.tf](https://github.com/le0lex/devops-netology/blob/8fe15dfed0a676a6f6a9ca388786bd1140f0d80c/HW_15.2/main.tf)  
 [versions.tf](https://github.com/le0lex/devops-netology/blob/8fe15dfed0a676a6f6a9ca388786bd1140f0d80c/HW_15.2/versions.tf)  
-[vars.tf](https://github.com/le0lex/devops-netology/blob/8fe15dfed0a676a6f6a9ca388786bd1140f0d80c/HW_15.2/vars.tf)  
+[vars.tf](https://github.com/le0lex/devops-netology/blob/9e5420f26319f85fbcac87e3c5e86fa565c73c55/HW_15.2/vars.tf)  
 [picture.png](https://github.com/le0lex/devops-netology/blob/8fe15dfed0a676a6f6a9ca388786bd1140f0d80c/HW_15.2/picture.png)  
   
 План отрабатывает успешно:  

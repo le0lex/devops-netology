@@ -1,5 +1,5 @@
 variable "yc_token" {
-  default = "AQAAAAAMsX6fAATuwWHveRAUZEVammXEyQQ7Ves"
+  default = "----------------------------"
 }
 
 variable "yc_cloud_id" {
